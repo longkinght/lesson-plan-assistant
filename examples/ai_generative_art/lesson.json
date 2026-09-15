@@ -1,0 +1,311 @@
+{
+  "schema_version": "1.0",
+  "lesson_meta": {
+    "week": "第1周",
+    "chapter_num": "1",
+    "title": "导论",
+    "course_name": "人工智能生成艺术",
+    "hours": 3,
+    "class_name": "",
+    "teacher": "张冬冬、黄彬",
+    "date": "",
+    "course_type": "理论课·案例教学",
+    "semester": "2025～2026学年第 一 学期",
+    "college": "传媒与设计艺术学院",
+    "department": "数字媒体艺术系",
+    "credits": "3学分",
+    "total_hours": "54学时",
+    "weekly_hours": "3学时"
+  },
+  "objectives": {
+    "knowledge": [
+      "理解人工智能基本概念与发展阶段",
+      "阐述AIGC的定义、分类及应用场景",
+      "列举生成模型的主要类型（GANs、VAEs、Diffusion Models、Transformers）"
+    ],
+    "ability": [
+      "能够结合艺术与设计领域分析至少1个AIGC应用案例",
+      "能够识别主流AIGC技术分类（文本、图像、音视频、多模态）",
+      "能够就AI伦理与版权议题提出自己的立场与理由"
+    ],
+    "quality": [
+      "树立负责任的创新意识，明确课程学习路径与项目导向",
+      "养成关注AI伦理、版权与合规边界的职业习惯"
+    ]
+  },
+  "student_analysis": "大一/大二艺术设计类专业学生，视觉与创作能力强，但AI技术背景薄弱；对AI绘画有好奇，多数停留在'工具尝鲜'层面，缺乏对AIGC原理与边界的概念框架。本课作为导论，重在建立认知地图与学习期待，忌技术术语堆砌。",
+  "key_points": [
+    "人工智能生成艺术的定义与分类",
+    "AIGC的发展现状与艺术设计领域的应用趋势",
+    "生成模型（GANs、VAEs、Diffusion、Transformers）概念性认知"
+  ],
+  "difficult_points": [
+    "学生易将'生成模型'与'AI绘画工具'混为一谈（认知误区）",
+    "如何理解不同生成模型的技术差异与适用场景",
+    "AI版权与伦理议题缺乏具体案例支撑，讨论易泛化"
+  ],
+  "methods": [
+    "讲授法",
+    "案例教学",
+    "参与式教学"
+  ],
+  "resources": [
+    "多媒体机房",
+    "课程PPT与AIGC应用案例集",
+    "主流AI绘画平台演示环境"
+  ],
+  "references": [],
+  "knowledge_tree": [
+    {
+      "name": "人工智能生成艺术",
+      "level": 1,
+      "node_type": "分类",
+      "category": "",
+      "cognitive": "",
+      "pre": [],
+      "post": [],
+      "related": [],
+      "tags": "",
+      "objective": "",
+      "description": ""
+    },
+    {
+      "name": "AIGC基础与AI发展",
+      "level": 2,
+      "node_type": "分类",
+      "category": "",
+      "cognitive": "",
+      "pre": [],
+      "post": [],
+      "related": [],
+      "tags": "",
+      "objective": "",
+      "description": ""
+    },
+    {
+      "name": "AI发展基石",
+      "level": 3,
+      "node_type": "分类",
+      "category": "",
+      "cognitive": "",
+      "pre": [],
+      "post": [],
+      "related": [],
+      "tags": "",
+      "objective": "",
+      "description": ""
+    },
+    {
+      "name": "AI发展历程概览",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "概念性",
+      "cognitive": "记忆",
+      "pre": [],
+      "post": ["AI核心技术简介", "生成模型概览"],
+      "related": [],
+      "tags": "重点",
+      "objective": "能够说出人工智能发展的关键节点与突破事件（至少3个）",
+      "description": "依据教案第1章第一节。解读：AI发展三起两落，深度学习兴起是关键拐点。应用：建立时间线认知。易错：把AI历史简单等同于ChatGPT出现。"
+    },
+    {
+      "name": "AI核心技术简介",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "概念性",
+      "cognitive": "记忆",
+      "pre": ["AI发展历程概览"],
+      "post": ["生成模型概览", "AIGC定义与发展现状"],
+      "related": [],
+      "tags": "",
+      "objective": "能够说出机器学习与深度学习的基本概念及其关系",
+      "description": "依据教案第1章第一节。解读：机器学习是AI的分支，深度学习是机器学习的分支。应用：理解后续生成模型的技术位置。易错：混淆'人工智能-机器学习-深度学习'的包含关系。"
+    },
+    {
+      "name": "生成模型与AIGC",
+      "level": 3,
+      "node_type": "分类",
+      "category": "",
+      "cognitive": "",
+      "pre": [],
+      "post": [],
+      "related": [],
+      "tags": "",
+      "objective": "",
+      "description": ""
+    },
+    {
+      "name": "生成模型概览",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "概念性",
+      "cognitive": "理解",
+      "pre": ["AI核心技术简介"],
+      "post": ["AIGC定义与发展现状"],
+      "related": ["AIGC技术分类"],
+      "tags": "重点",
+      "objective": "能够解释GANs、VAEs、Diffusion Models、Transformers四类生成模型的核心思想与差异",
+      "description": "依据教案第1章第二节。解读：四类模型代表不同生成思路（对抗/变分/去噪/注意力）。应用：为后续SD、ComfyUI等章节建立概念底座。易错：把Diffusion与GAN混为一谈。"
+    },
+    {
+      "name": "AIGC定义与发展现状",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "概念性",
+      "cognitive": "理解",
+      "pre": ["生成模型概览"],
+      "post": ["AIGC应用案例分析"],
+      "related": ["AIGC技术分类"],
+      "tags": "重点",
+      "objective": "能够用一句话准确阐述AIGC的定义，并说出其发展现状的3个特征",
+      "description": "依据教案第1章第二节。解读：AI Generated Content，AI生成内容。应用：区分AIGC与'AI辅助创作'的边界。易错：把AIGC等同于'AI修图'，忽略多模态范畴。"
+    },
+    {
+      "name": "AIGC应用案例分析",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "程序性",
+      "cognitive": "分析",
+      "pre": ["AIGC定义与发展现状"],
+      "post": ["AIGC技术分类"],
+      "related": ["AI伦理与版权"],
+      "tags": "",
+      "objective": "能够分析一个AIGC艺术设计案例，说清其生成流程与价值点",
+      "description": "依据教案第1章第二节。解读：案例教学，如AI绘画商业应用、AI辅助品牌设计。应用：为第4-6章工具实战铺垫。易错：只谈效果不谈流程与局限。"
+    },
+    {
+      "name": "AIGC技术分类与伦理",
+      "level": 3,
+      "node_type": "分类",
+      "category": "",
+      "cognitive": "",
+      "pre": [],
+      "post": [],
+      "related": [],
+      "tags": "",
+      "objective": "",
+      "description": ""
+    },
+    {
+      "name": "AIGC技术分类",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "概念性",
+      "cognitive": "理解",
+      "pre": ["AIGC应用案例分析"],
+      "post": ["AI伦理与版权"],
+      "related": ["生成模型概览"],
+      "tags": "",
+      "objective": "能够把AIGC技术按文本、图像、音视频、多模态四类正确归类",
+      "description": "依据教案第1章第三节。解读：文本、图像、音视频、多模态四类主流方向。应用：为课程章节地图（LLM/绘画/音视频）建立框架。易错：忽略多模态这一大类。"
+    },
+    {
+      "name": "AI伦理与版权",
+      "level": 4,
+      "node_type": "知识点",
+      "category": "元认知",
+      "cognitive": "评价",
+      "pre": ["AIGC技术分类"],
+      "post": [],
+      "related": ["AIGC应用案例分析"],
+      "tags": "重点;难点",
+      "objective": "能够就AI生成内容的版权归属与伦理风险提出自己的立场，并给出至少1条负责任使用原则",
+      "description": "依据教案第1章第三节。解读：AI伦理、版权问题与负责任的创新。应用：贯穿全课程的安全红线。易错：认为'AI生成即无版权问题'。"
+    }
+  ],
+  "flow": {
+    "pre_class": {
+      "content": "课前预习：阅读课程大纲与AIGC科普短文，注册体验一个AI绘画平台",
+      "student_activity": "浏览课程大纲，用任意AI绘画平台生成1张图并记录感受",
+      "teacher_activity": "准备课程PPT、AIGC案例集与演示环境",
+      "design_intent": "让零基础学生在课前先产生直观体验，课上从体验出发建立概念"
+    },
+    "in_class": [
+      {
+        "stage": "导入",
+        "content": "课程介绍与学习目标（15分钟）；1. 课程介绍、学习目标与最终项目预览；2. 项目导向：本课程最终作品集要求",
+        "student_activity": "了解课程框架与考核方式，记录个人学习目标",
+        "teacher_activity": "讲解课程安排、项目导向与考核要求，展示往届作品",
+        "design_intent": "用'最终作品集'锚定学习动机，让学生带着目标进入内容",
+        "knowledge_refs": ["AI发展历程概览"]
+      },
+      {
+        "stage": "新授",
+        "content": "第一节 AIGC概览与AI发展基石（40分钟）；1. 人工智能(AI)发展历程概览（关键节点与突破）；2. AI核心技术简介：机器学习、深度学习基础概念",
+        "student_activity": "跟随时间线梳理AI发展脉络，填写'三起两落'关键节点表",
+        "teacher_activity": "讲授AI发展历程与核心概念，穿插交互提问确认理解",
+        "design_intent": "先建立'AI是什么'的认知基线，为生成模型与AIGC概念做铺垫",
+        "knowledge_refs": ["AI发展历程概览", "AI核心技术简介"]
+      },
+      {
+        "stage": "新授",
+        "content": "第二节 生成模型与AIGC艺术设计初探（40分钟）；1. 生成模型概览：GANs、VAEs、Diffusion Models、Transformers（概念性介绍）；2. AIGC的定义与发展现状；3. AIGC在艺术与设计领域的应用案例分析",
+        "student_activity": "对比四类生成模型特点，分组分析1个AIGC应用案例",
+        "teacher_activity": "用类比讲解生成模型差异，展示AIGC应用案例并引导分析",
+        "design_intent": "从'AI工具'上升到'生成原理'，防止学生把AIGC等同于某个软件",
+        "knowledge_refs": ["生成模型概览", "AIGC定义与发展现状", "AIGC应用案例分析"]
+      },
+      {
+        "stage": "互动练习",
+        "content": "第三节 AIGC技术分类与伦理基石（25分钟）；1. 主流AIGC技术分类详解（文本、图像、音视频、多模态）；2. 重要议题：AI伦理、版权问题与负责任的创新；3. 小组讨论：'AI生成的艺术品属于谁？'",
+        "student_activity": "完成AIGC四类技术归类练习，参与伦理议题小组讨论并发表观点",
+        "teacher_activity": "组织归类练习与伦理辩论，总结负责任的创新原则",
+        "design_intent": "把技术分类与伦理红线落到具体判断上，训练元认知与价值判断",
+        "knowledge_refs": ["AIGC技术分类", "AI伦理与版权"]
+      },
+      {
+        "stage": "小结作业",
+        "content": "课堂小结与作业布置（15分钟）；回顾知识地图：AI发展→生成模型→AIGC→伦理；布置思考题作业",
+        "student_activity": "回顾本课知识地图，记录作业要求",
+        "teacher_activity": "总结知识结构，说明思考题与作业提交要求",
+        "design_intent": "把本课放入课程整体地图，明确'下一章：LLM基础'的衔接",
+        "knowledge_refs": ["AI伦理与版权"]
+      }
+    ],
+    "post_class": {
+      "content": "思考题和作业：搜集并分享一个你认为有趣的AIGC应用案例，并简述其可能涉及的技术类型和潜在的伦理考量",
+      "student_activity": "搜集AIGC案例，撰写案例分析（技术类型+伦理考量），提交到课程平台",
+      "teacher_activity": "批阅案例作业，挑选优秀案例供下节课展示",
+      "design_intent": "把课上概念迁移到真实案例，训练'技术分类+伦理判断'双重能力"
+    }
+  },
+  "reflection": {
+    "effect": "预期效果：全班完成AIGC案例作业，90%以上学生能正确归类四类生成模型与AIGC技术分类；学生对课程项目导向形成明确认知",
+    "diagnosis": "诊断：零基础学生易在'生成模型四类差异'处概念混淆；伦理讨论若无具体案例支撑易泛化空谈",
+    "improvement": "改进：生成模型差异改用'作画风格类比'（对抗式/重构式/去噪式/注意力式）；伦理环节预置2个真实版权争议案例供讨论"
+  },
+  "glossary": [
+    {
+      "term": "AIGC",
+      "definition": "AI Generated Content，人工智能生成内容，指由AI生成的文本、图像、音视频、多模态内容"
+    },
+    {
+      "term": "生成模型",
+      "definition": "通过学习数据分布来生成新样本的模型，主流有GANs、VAEs、Diffusion Models、Transformers"
+    },
+    {
+      "term": "GANs",
+      "definition": "生成对抗网络，由生成器与判别器对抗训练，代表作DeepFake、风格迁移"
+    },
+    {
+      "term": "VAEs",
+      "definition": "变分自编码器，通过编码-解码与潜在空间采样生成新内容"
+    },
+    {
+      "term": "Diffusion Models",
+      "definition": "扩散模型，通过去噪过程从噪声中还原图像，Stable Diffusion的基础"
+    },
+    {
+      "term": "Transformer",
+      "definition": "基于注意力机制的架构，大语言模型（LLM）的基础，也用于多模态生成"
+    },
+    {
+      "term": "机器学习",
+      "definition": "AI的分支，让计算机从数据中学习规律；深度学习是其基于神经网络的子集"
+    },
+    {
+      "term": "提示词工程",
+      "definition": "通过设计提示词引导AI输出的技术（第2章重点，本课仅概念引入）"
+    }
+  ]
+}

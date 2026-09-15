@@ -1,0 +1,48 @@
+{
+  "name": "teacher-zhang",
+  "label": "张冬冬·章节教案风格",
+  "source": "财大-人工智能生成艺术教案/教学实施计划（用户历史文件）",
+  "version": "1.0",
+  "cover": {
+    "title_template": "{course_name}教案",
+    "semester": "2025～2026学年第 一 学期",
+    "fields": [
+      { "label": "学院（部）", "value": "传媒与设计艺术学院" },
+      { "label": "教研室（系）", "value": "数字媒体艺术系" },
+      { "label": "授课班级", "value": "{class_name}" },
+      { "label": "课程学分", "value": "{credits}" },
+      { "label": "课程学时", "value": "{total_hours}" },
+      { "label": "课程周学时", "value": "{weekly_hours}" },
+      { "label": "任课教师", "value": "{teacher}" }
+    ],
+    "note": "填写说明：1、填写封面时用课程名称替换封面上的课程名称，删除说明文字。2、教学环境填写普通教室、多媒体教室、语音室、实验室等。"
+  },
+  "chapter": {
+    "head_template": "第{chapter_num}章",
+    "title_field": "章标题",
+    "field_order": [
+      "课时",
+      "教学方法",
+      "教学目的及要求",
+      "教学环境",
+      "重点",
+      "难点",
+      "讲授内容",
+      "思考题和作业",
+      "参考文献"
+    ],
+    "defaults": {
+      "教学环境": "多媒体机房",
+      "教学方法": ["讲授法", "案例教学", "其他"],
+      "参考文献": ""
+    }
+  },
+  "content_style": {
+    "purpose_requirements": "目的：{objectives_merged}。要求：{requirements_merged}。",
+    "key_points_prefix": "重点：",
+    "difficult_prefix": "难点：",
+    "teaching_content_sections": "按课中环节重组为第一节/第二节/第三节…，节内为编号列表",
+    "homework_label": "思考题和作业",
+    "reflection_not_in_template": "教学反思不在教师模板中，作为附加节输出"
+  }
+}

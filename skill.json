@@ -1,0 +1,32 @@
+{
+  "name": "lesson-plan-assistant",
+  "version": "1.1.0",
+  "description": "备课知识图谱助手：输入课题+周次+要点，一键产出标准教案 docx、Markdown 知识图谱、HTML 交互信息图三件套；支持 --style teacher-zhang 教师风格档案驱动，输出与用户历史教案同风格的成品。同源同构、硬校验保证教案与图谱知识点一致。",
+  "author": "doubao-agent",
+  "license": "MIT",
+  "imports": [],
+  "files": {
+    "SKILL.md": "./SKILL.md",
+    "references/lesson-json-schema.md": "./references/lesson-json-schema.md",
+    "references/extraction-prompt.md": "./references/extraction-prompt.md",
+    "references/quality-checklist.md": "./references/quality-checklist.md",
+    "references/standard-lesson-template.md": "./references/standard-lesson-template.md",
+    "references/teacher-style.json": "./references/teacher-style.json",
+    "references/teacher-style-profile.md": "./references/teacher-style-profile.md",
+    "scripts/lesson_assistant.py": "./scripts/lesson_assistant.py",
+    "scripts/common.py": "./scripts/common.py",
+    "scripts/verify_consistency.py": "./scripts/verify_consistency.py",
+    "scripts/build_graph.py": "./scripts/build_graph.py",
+    "scripts/render_html.py": "./scripts/render_html.py",
+    "scripts/build_lesson_docx.py": "./scripts/build_lesson_docx.py",
+    "scripts/audit_artifacts.py": "./scripts/audit_artifacts.py",
+    "templates/knowledge-graph.html": "./templates/knowledge-graph.html",
+    "examples/stack_queue/lesson.json": "./examples/stack_queue/lesson.json",
+    "examples/ai_training/lesson.json": "./examples/ai_training/lesson.json",
+    "examples/ai_generative_art/lesson.json": "./examples/ai_generative_art/lesson.json"
+  },
+  "runtime": {
+    "python": "3.8+",
+    "pip": ["python-docx"]
+  }
+}
