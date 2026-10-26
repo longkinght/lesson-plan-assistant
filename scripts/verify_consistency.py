@@ -4,7 +4,7 @@
 退出码: 0=通过, 1=存在错误
 """
 import argparse
-from common import load_lesson, validate_lesson, print_report
+from common import LessonInputError, load_lesson, validate_lesson, print_report
 
 
 def main():
@@ -12,7 +12,11 @@ def main():
     parser.add_argument("--json", required=True, help="lesson.json 路径")
     args = parser.parse_args()
 
-    data = load_lesson(args.json)
+    try:
+        data = load_lesson(args.json)
+    except LessonInputError as exc:
+        print("输入错误：%s" % exc)
+        return 2
     errors, warnings = validate_lesson(data)
     ok = print_report(errors, warnings)
     return 0 if ok else 1

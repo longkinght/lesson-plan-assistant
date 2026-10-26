@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Lesson Plan Assistant 2.0">
+<title>课程知识图谱</title>
+<style>
+  :root {
+    --ink: #18262d;
+    --muted: #60727b;
+    --paper: #f6f4ef;
+    --card: #ffffff;
+    --line: #dde4e1;
+    --teal: #0f766e;
+    --teal-deep: #123f44;
+    --teal-soft: #e6f3ef;
+    --gold: #b7791f;
+    --gold-soft: #fbf2df;
+    --danger: #b43d3d;
+    --shadow: 0 16px 44px rgba(20, 45, 49, 0.08);
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; color: var(--ink); background:
+      radial-gradient(circle at 10% 0%, rgba(15,118,110,.08), transparent 28rem),
+      linear-gradient(180deg, #f8f6f1 0%, #f5f7f5 48%, #f7f5f0 100%);
+    font-family: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+    line-height: 1.68;
+  }
+  button, input { font: inherit; }
+  button { color: inherit; }
+  a { color: inherit; }
+
+  .masthead {
+    position: relative; overflow: hidden; color: #f6fffc;
+    background: linear-gradient(124deg, #0e3438 0%, #13575a 56%, #0f766e 100%);
+  }
+  .masthead::before {
+    content: ""; position: absolute; width: 420px; height: 420px; border: 1px solid rgba(255,255,255,.13);
+    border-radius: 50%; right: -150px; top: -240px;
+  }
+  .masthead::after {
+    content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%;
+    background: rgba(201,158,76,.16); right: 10%; bottom: -165px;
+  }
+  .masthead-inner { position: relative; z-index: 1; max-width: 1380px; margin: 0 auto; padding: 24px 32px 88px; }
+  .brandline { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+  .brand { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .2em; font-weight: 700; }
+  .brand-mark { width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.48); border-radius: 9px; position: relative; }
+  .brand-mark::before, .brand-mark::after {
+    content: ""; position: absolute; background: #d8b46b; border-radius: 2px;
+  }
+  .brand-mark::before { width: 13px; height: 2px; left: 8px; top: 10px; }
+  .brand-mark::after { width: 2px; height: 11px; left: 8px; top: 10px; }
+  .review-note {
+    border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 4px 12px;
+    font-size: 11px; color: #d8e8e4;
+  }
+  .hero { max-width: 940px; padding: 48px 0 22px; }
+  .eyebrow { color: #d8b46b; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { margin: 10px 0 12px; font-size: clamp(32px, 4.4vw, 58px); line-height: 1.14; letter-spacing: -.035em; font-weight: 760; }
+  .hero-sub { margin: 0; color: #cfe1dd; max-width: 760px; font-size: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .chip {
+    font-size: 12px; padding: 5px 11px; border-radius: 6px; border: 1px solid rgba(255,255,255,.19);
+    background: rgba(255,255,255,.065); color: #edf8f5;
+  }
+  .chip.gold { color: #ffe3a8; border-color: rgba(216,180,107,.45); background: rgba(216,180,107,.1); }
+
+  .shell { max-width: 1380px; margin: -54px auto 0; padding: 0 32px 48px; position: relative; z-index: 2; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); }
+  .stat { background: rgba(255,255,255,.97); padding: 18px 22px; }
+  .stat strong { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 30px; line-height: 1.2; color: var(--teal-deep); font-weight: 500; }
+  .stat span { color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 6px;
+    margin: 20px 0 22px; padding: 8px; background: rgba(246,244,239,.9); border: 1px solid var(--line);
+    border-radius: 12px; backdrop-filter: blur(14px);
+  }
+  .toolbar a {
+    text-decoration: none; padding: 7px 12px; border-radius: 7px; font-size: 12px; color: var(--muted); white-space: nowrap;
+  }
+  .toolbar a:hover { background: #fff; color: var(--teal-deep); }
+  .toolbar .spacer { flex: 1; }
+  .toolbar button {
+    border: 1px solid var(--line); background: #fff; border-radius: 7px; padding: 6px 10px;
+    font-size: 11px; cursor: pointer; color: var(--muted);
+  }
+  .toolbar button:hover { border-color: #a9c7c1; color: var(--teal); }
+
+  .layout { display: grid; grid-template-columns: 318px minmax(0, 1fr); gap: 22px; align-items: start; }
+  .sidebar { position: sticky; top: 68px; display: flex; flex-direction: column; gap: 16px; }
+  .main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 4px 18px rgba(20,45,49,.035); min-width: 0;
+  }
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 19px 22px 0; }
+  .card-head h2 { margin: 0; font-size: 14px; letter-spacing: .02em; font-weight: 760; color: var(--teal-deep); }
+  .card-head p { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+  .section-no { font-family: Georgia, serif; color: #c5b07a; font-size: 12px; letter-spacing: .08em; }
+  .card-body { padding: 16px 22px 22px; }
+
+  .meta-list { margin: 0; }
+  .meta-row { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 12.5px; }
+  .meta-row:last-child { border-bottom: 0; }
+  .meta-row dt { color: var(--muted); }
+  .meta-row dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+  .objective-group { margin-bottom: 15px; }
+  .objective-group:last-child { margin-bottom: 0; }
+  .objective-label { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: var(--teal); letter-spacing: .08em; }
+  .objective-label::before { content: ""; width: 14px; height: 1px; background: #c9a85b; }
+  .objective-item { position: relative; padding: 0 0 5px 13px; font-size: 12.5px; color: #34454c; }
+  .objective-item::before { content: "·"; position: absolute; left: 1px; color: #a3b8b3; }
+  .objective-refs { display: block; color: #82938e; font-size: 10.5px; margin-top: 2px; }
+
+  /* 只收紧上内边距；左右与底部沿用 .card-body，避免内容贴边 */
+  .card-body.rhythm { padding-top: 8px; }
+  .rhythm-bar { display: flex; min-height: 12px; overflow: hidden; border-radius: 5px; background: #e6ebe8; }
+  .rhythm-seg { min-width: 4px; border-right: 2px solid #fff; }
+  .rhythm-seg:last-child { border-right: 0; }
+  .rhythm-list { margin-top: 12px; display: grid; gap: 7px; }
+  .rhythm-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: baseline; font-size: 11.5px; }
+  .rhythm-row span:first-child { color: #42555a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rhythm-row span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .flow-total { display: flex; justify-content: space-between; padding-top: 11px; margin-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+
+  .tree-controls { display: flex; gap: 8px; align-items: center; }
+  .search {
+    width: 172px; border: 1px solid var(--line); background: #fbfcfa; color: var(--ink);
+    border-radius: 7px; padding: 7px 10px; font-size: 11px; outline: none;
+  }
+  .search:focus { border-color: #82aaa1; box-shadow: 0 0 0 3px rgba(15,118,110,.08); }
+  .tree-workbench { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(236px, .82fr); gap: 22px; align-items: start; }
+  .tree { padding-top: 8px; min-width: 0; }
+  .tree-aside {
+    position: sticky; top: 68px; min-height: 280px; padding: 17px;
+    border: 1px solid #e0e9e5; border-radius: 12px;
+    background: linear-gradient(160deg, #f7faf8 0%, #fbfaf6 100%);
+  }
+  .aside-kicker { color: #a2823f; font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+  .tree-aside h3 { margin: 5px 0 8px; color: var(--teal-deep); font-size: 15px; line-height: 1.42; }
+  .aside-copy { color: #61746f; font-size: 11.5px; line-height: 1.72; }
+  .aside-block { padding-top: 12px; margin-top: 12px; border-top: 1px solid #e2eae6; }
+  .aside-label { display: block; margin-bottom: 4px; color: #8a9b96; font-size: 9px; letter-spacing: .08em; }
+  .aside-relation { color: #4b625e; font-size: 11px; line-height: 1.7; }
+  .bloom-bars { display: grid; gap: 7px; margin-top: 11px; }
+  .bloom-bar-row { display: grid; grid-template-columns: 30px minmax(0,1fr) 18px; gap: 7px; align-items: center; font-size: 9.5px; color: #6f817c; }
+  .bloom-track { height: 5px; background: #e6ece9; border-radius: 99px; overflow: hidden; }
+  .bloom-fill { height: 100%; border-radius: 99px; }
+  .node { position: relative; }
+  .node + .node { margin-top: 1px; }
+  .node-row {
+    display: flex; align-items: flex-start; gap: 8px; padding: 7px 8px; border-radius: 8px;
+    transition: background .14s ease;
+  }
+  .node-row:hover { background: #f5f9f7; }
+  .branch-toggle, .detail-toggle {
+    border: 0; background: transparent; cursor: pointer; padding: 0; color: #9aaca6;
+  }
+  .branch-toggle { width: 18px; height: 22px; font-size: 10px; transition: transform .14s ease; line-height: 22px; }
+  .branch-toggle[aria-expanded="false"] { transform: rotate(-90deg); }
+  .node-mark {
+    width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; margin-top: 8px; background: #0f766e;
+    box-shadow: 0 0 0 3px rgba(15,118,110,.08);
+  }
+  .node-copy { min-width: 0; flex: 1; }
+  .node-title {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 22px;
+    font-size: 13px; font-weight: 650; border: 0; background: none; padding: 0; text-align: left; cursor: pointer;
+  }
+  .node-row.is-category .node-title { color: var(--teal-deep); font-weight: 760; }
+  .node-row.is-knowledge .node-title:hover { color: var(--teal); }
+  .node-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+  .pill { display: inline-flex; align-items: center; padding: 0 6px; border-radius: 4px; font-size: 9.5px; line-height: 18px; letter-spacing: .02em; white-space: nowrap; }
+  .pill.bloom { color: #fff; font-weight: 650; }
+  .pill.kind { color: #596a6f; background: #eef1ef; }
+  .pill.tag { color: #895d17; background: var(--gold-soft); }
+  .node-level { flex: 0 0 auto; color: #a4b1ad; font-family: Georgia, serif; font-size: 10px; padding-top: 5px; }
+  .children { margin-left: 17px; padding-left: 13px; border-left: 1px solid #e3ebe7; }
+  .children.collapsed, .node-detail[hidden], .hidden { display: none !important; }
+  .node-detail {
+    margin: 2px 8px 8px 31px; padding: 12px 14px; border: 1px solid #e1ebe7;
+    border-radius: 8px; background: #f8fbf9; font-size: 12px;
+  }
+  .detail-objective { display: flex; gap: 8px; color: #235c55; font-weight: 620; }
+  .detail-objective::before { content: "目标"; flex: 0 0 auto; font-size: 9px; letter-spacing: .08em; color: #738b85; padding-top: 3px; }
+  .detail-desc { margin-top: 7px; color: #5c6e73; line-height: 1.7; }
+  .relations { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .rel-pill { font-size: 10px; color: #52666b; background: #edf2f0; border-radius: 4px; padding: 2px 6px; }
+  .rel-pill b { color: #869993; font-weight: 500; }
+  .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 13px; margin-top: 15px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 10.5px; color: var(--muted); }
+  .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .empty { padding: 22px; text-align: center; color: var(--muted); font-size: 12px; }
+
+  .data-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11.5px; }
+  .data-table th {
+    color: #52666b; text-align: left; font-weight: 650; font-size: 10px; letter-spacing: .05em;
+    background: #f7f9f7; border-bottom: 1px solid var(--line); padding: 9px 9px;
+  }
+  .data-table td { padding: 9px; border-bottom: 1px solid #edf1ef; vertical-align: top; overflow-wrap: anywhere; }
+  .data-table tr:last-child td { border-bottom: 0; }
+  .data-table tr:hover td { background: #fbfcfa; }
+  .data-table .name-cell { color: var(--teal-deep); font-weight: 630; }
+  .data-table .muted { color: var(--muted); }
+  .table-scroll { overflow-x: auto; }
+  .table-wide { min-width: 720px; }
+  .obj-table { min-width: 690px; }
+  .objective-table td:nth-child(2) { line-height: 1.65; }
+  .glossary-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .glossary-item { padding: 12px 13px; background: #f8faf8; border: 1px solid #eaf0ed; border-radius: 9px; }
+  .glossary-item dt { color: var(--teal-deep); font-size: 12px; font-weight: 700; }
+  .glossary-item dd { margin: 4px 0 0; color: #5a6b70; font-size: 11.5px; line-height: 1.68; }
+
+  .foot {
+    max-width: 1380px; margin: 0 auto; padding: 0 32px 34px; display: flex; justify-content: space-between;
+    gap: 16px; color: #91a09b; font-size: 10.5px; flex-wrap: wrap;
+  }
+  .foot strong { color: #697e78; font-weight: 650; }
+  .foot-copy { color: #a8946a; }
+
+  @media (max-width: 1080px) {
+    .layout { grid-template-columns: 274px minmax(0, 1fr); }
+    .shell, .foot { padding-left: 22px; padding-right: 22px; }
+    .masthead-inner { padding-left: 22px; padding-right: 22px; }
+  }
+  @media (max-width: 820px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; order: 2; }
+    .main { order: 1; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .glossary-grid { grid-template-columns: 1fr; }
+    .tree-workbench { grid-template-columns: 1fr; }
+    .tree-aside { position: static; min-height: 0; }
+    .toolbar { overflow-x: auto; }
+    .toolbar .spacer { display: none; }
+  }
+  @media (max-width: 520px) {
+    .masthead-inner { padding: 20px 16px 76px; }
+    .shell, .foot { padding-left: 14px; padding-right: 14px; }
+    .hero { padding-top: 34px; }
+    h1 { font-size: 34px; }
+    .review-note { display: none; }
+    .stat { padding: 14px 15px; }
+    .stat strong { font-size: 25px; }
+    .card-head, .card-body { padding-left: 15px; padding-right: 15px; }
+    .tree-controls { flex-wrap: wrap; justify-content: flex-end; }
+    .search { width: 128px; }
+    .children { margin-left: 9px; padding-left: 9px; }
+    .node-detail { margin-left: 10px; }
+    .foot { flex-direction: column; }
+  }
+
+  @media print {
+    @page { size: A4; margin: 14mm; }
+    body { background: #fff; color: #111; font-size: 10pt; }
+    .masthead-inner { padding: 18px 0 28px; }
+    .masthead { background: #123f44 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .hero { padding: 24px 0 10px; }
+    h1 { font-size: 28pt; }
+    .shell { margin-top: 0; padding: 8mm 0 0; max-width: none; }
+    .stats { box-shadow: none; margin-bottom: 7mm; }
+    .toolbar, .search, .tree-controls, .review-note, .tree-aside { display: none !important; }
+    .layout { display: block; }
+    .tree-workbench { display: block; }
+    .sidebar { position: static; margin-bottom: 6mm; display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+    .main { display: block; }
+    .card { box-shadow: none; break-inside: avoid; margin-bottom: 6mm; border-color: #ccd6d2; }
+    .children.collapsed { display: block !important; }
+    .node-detail[hidden] { display: block !important; }
+    .node-detail { break-inside: avoid; }
+    .data-table { font-size: 8pt; }
+    .table-scroll { overflow: visible; }
+    .table-wide, .obj-table { min-width: 0; }
+    .foot { padding: 0; }
+    a { text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brandline">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>LESSON ATLAS</span></div>
+      <span class="review-note">AI 辅助生成 · 教师审核后使用</span>
+    </div>
+    <div class="hero">
+      <div class="eyebrow">Course Knowledge Map</div>
+      <h1 id="page-title">课程知识图谱</h1>
+      <p class="hero-sub" id="hero-sub"></p>
+      <div class="chips" id="hero-chips"></div>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="stats" aria-label="课程概览">
+    <div class="stat"><strong id="stat-nodes">0</strong><span>知识节点</span></div>
+    <div class="stat"><strong id="stat-relations">0</strong><span>节点关系</span></div>
+    <div class="stat"><strong id="stat-objectives">0</strong><span>教学目标</span></div>
+    <div class="stat"><strong id="stat-minutes">0</strong><span>课中分钟</span></div>
+  </section>
+
+  <nav class="toolbar" aria-label="页面导航">
+    <a href="#tree">知识树</a>
+    <a href="#relations">关系</a>
+    <a href="#objectives">目标</a>
+    <a href="#glossary">术语</a>
+    <span class="spacer"></span>
+    <button type="button" id="expand-all">展开全部</button>
+    <button type="button" id="collapse-all">收起全部</button>
+    <button type="button" onclick="window.print()">打印 / PDF</button>
+  </nav>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <section class="card">
+        <div class="card-head"><div><span class="section-no">01</span><h2>课程信息</h2></div></div>
+        <div class="card-body"><dl class="meta-list" id="course-meta"></dl></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div><span class="section-no">02</span><h2>课堂节奏</h2></div></div>
+        <div class="card-body rhythm">
+          <div class="rhythm-bar" id="rhythm-bar"></div>
+          <div class="rhythm-list" id="rhythm-list"></div>
+          <div class="flow-total"><span>课中合计</span><strong id="flow-total"></strong></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><div><span class="section-no">03</span><h2>教学目标</h2></div></div>
+        <div class="card-body" id="objective-summary"></div>
+      </section>
+    </aside>
+
+    <div class="main">
+      <section class="card" id="tree">
+        <div class="card-head">
+          <div><span class="section-no">04</span><h2>知识树</h2><p>展开分类查看结构，点击知识点查看目标与关系</p></div>
+          <div class="tree-controls"><input class="search" id="tree-search" type="search" placeholder="筛选知识点" aria-label="筛选知识点"></div>
+        </div>
+        <div class="card-body">
+          <div class="tree-workbench">
+            <div>
+              <div class="tree" id="tree-root"></div>
+              <div class="empty hidden" id="tree-empty">没有匹配的知识点，请更换关键词。</div>
+              <div class="legend" id="legend"></div>
+            </div>
+            <aside class="tree-aside" id="tree-aside" aria-live="polite"></aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="relations">
+        <div class="card-head"><div><span class="section-no">05</span><h2>知识关系</h2><p>前置、后置与关联关系由同一份数据生成</p></div></div>
+        <div class="card-body table-scroll"><table class="data-table table-wide"><thead><tr><th style="width:20%">节点</th><th style="width:20%">前置</th><th style="width:20%">后置</th><th style="width:18%">关联</th><th style="width:11%">认知</th><th style="width:11%">分类</th></tr></thead><tbody id="relation-body"></tbody></table></div>
+      </section>
+
+      <section class="card" id="objectives">
+        <div class="card-head"><div><span class="section-no">06</span><h2>目标与知识点映射</h2><p>每条教学目标必须可追溯到具体知识节点</p></div></div>
+        <div class="card-body table-scroll"><table class="data-table obj-table objective-table"><thead><tr><th style="width:12%">类型</th><th style="width:55%">教学目标</th><th style="width:33%">绑定知识点</th></tr></thead><tbody id="objective-body"></tbody></table></div>
+      </section>
+
+      <section class="card" id="glossary">
+        <div class="card-head"><div><span class="section-no">07</span><h2>术语表</h2><p>课程中的关键概念与统一解释</p></div></div>
+        <div class="card-body"><dl class="glossary-grid" id="glossary-body"></dl></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <span><strong>Lesson Atlas</strong> · 一份结构化数据，三种同源产物</span>
+  <span>教案 DOCX · 知识图谱 Markdown · 离线信息图 HTML</span>
+  <span class="foot-copy">© 2026 黄彬 · MIT License</span>
+</footer>
+
+<script id="lesson-data" type="application/json">{
+ "schema_version": "2.0",
+ "lesson_meta": {
+  "week": "第1-3天",
+  "title": "企业AI实战培训（3天12模块）",
+  "course_name": "企业AI应用实战训练营",
+  "hours": 16.5,
+  "class_name": "企业参训学员（4组）",
+  "teacher": "",
+  "date": "",
+  "course_type": "企业内训·实战工作坊"
+ },
+ "objectives": {
+  "knowledge": [
+   {
+    "text": "能够说出AI的能力边界与常见误区，并解释人机协作中人的责任",
+    "knowledge_refs": [
+     "AI能力边界与误区",
+     "保密红线与合规意识"
+    ]
+   },
+   {
+    "text": "能够解释Agent、知识库、Skill的核心概念及其在企业场景中的价值",
+    "knowledge_refs": [
+     "Agent与知识库构建",
+     "Skill概念与价值"
+    ]
+   },
+   {
+    "text": "能够描述人机协作五步法的五个步骤及其各自作用",
+    "knowledge_refs": [
+     "人机协作五步法"
+    ]
+   }
+  ],
+  "ability": [
+   {
+    "text": "能够运用五步法把岗位任务拆解为可执行的AI协作流程",
+    "knowledge_refs": [
+     "人机协作五步法",
+     "岗位任务转智能体"
+    ]
+   },
+   {
+    "text": "能够构建含知识库的最小可行智能体，并编写测试一个自建Skill",
+    "knowledge_refs": [
+     "Agent与知识库构建",
+     "Skill输入处理输出设计"
+    ]
+   },
+   {
+    "text": "能够使用Vibe Coding以自然语言生成工作台或小工具原型",
+    "knowledge_refs": [
+     "VibeCoding自然语言开发",
+     "工作台与小工具原型"
+    ]
+   },
+   {
+    "text": "能够设计并演示一件可落地的AI应用作品",
+    "knowledge_refs": [
+     "作品三选一实战",
+     "成果展示与点评复盘"
+    ]
+   }
+  ],
+  "quality": [
+   {
+    "text": "树立保密红线与合规使用AI的意识",
+    "knowledge_refs": [
+     "保密红线与合规意识"
+    ]
+   },
+   {
+    "text": "养成'先定义目标、再验收结果'的人机协作工程习惯",
+    "knowledge_refs": [
+     "人机协作五步法"
+    ]
+   },
+   {
+    "text": "增强将AI能力转化为岗位生产力与创新成果的行动自觉",
+    "knowledge_refs": [
+     "成果展示与点评复盘"
+    ]
+   }
+  ]
+ },
+ "student_analysis": "参训学员为企业在职员工（以非技术背景为主），对AI有好奇但认知碎片化，岗位任务多样；多数人无编程经验，担心'学不会'。培训应以'带得走的作品'为锚，降低技术门槛，强调场景、流程与产出，忌讲术语堆砌。",
+ "key_points": [
+  "AI能力边界与保密红线（认知基线）",
+  "人机协作五步法（方法论主线）",
+  "Agent/知识库/Skill的构建与应用（工具主线）",
+  "Vibe Coding自然语言开发与作品落地（产出主线）"
+ ],
+ "difficult_points": [
+  "学员易把AI当'搜索引擎'或'万能工具'，误判能力边界（认知误区）",
+  "把岗位任务抽象成输入/处理/输出时易过粗或过细，导致智能体不可用（学生难懂）",
+  "从'会演示'到'能落地'的跨越：真实业务数据与保密要求的冲突处理"
+ ],
+ "methods": [
+  "任务驱动法（每模块带产出）",
+  "五步法工作坊（拆解练习）",
+  "案例示范+分组仿做",
+  "路演评比（分组展示+讲师点评+学员互评）"
+ ],
+ "resources": [
+  "AI工具账号与演示环境",
+  "课程讲义与练习单（五步法模板）",
+  "分组课题方向卡",
+  "企业脱敏业务样例（预置3组）"
+ ],
+ "knowledge_tree": [
+  {
+   "name": "企业AI实战培训",
+   "level": 1,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "DAY1 AI通识与人机协作",
+   "level": 2,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "模块01-02 认知奠基与五步法",
+   "level": 3,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "AI能力边界与误区",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "概念性",
+   "cognitive": "理解",
+   "pre": [],
+   "post": [
+    "保密红线与合规意识",
+    "人机协作五步法"
+   ],
+   "related": [
+    "人机协作五步法"
+   ],
+   "tags": "重点",
+   "objective": "能够说出AI能做什么/不能做什么，并列举至少3个常见认知误区",
+   "description": "依据模块01。解读：AI擅长模式生成与信息整合，不擅长事实核验与价值判断。应用：用'能/不能'清单校准岗位预期。易错：把AI当搜索引擎或万能工具。"
+  },
+  {
+   "name": "保密红线与合规意识",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "概念性",
+   "cognitive": "记忆",
+   "pre": [
+    "AI能力边界与误区"
+   ],
+   "post": [
+    "Agent与知识库构建"
+   ],
+   "related": [
+    "新媒体AIGC应用"
+   ],
+   "tags": "重点",
+   "objective": "能够复述保密红线条款，并判断3个涉密场景中哪些数据不可直接投喂AI",
+   "description": "依据模块01。解读：涉密数据、个人隐私不得直接输入外部AI。应用：建立'先脱敏再喂料'习惯。易错：为图方便直接上传敏感文件。"
+  },
+  {
+   "name": "人机协作五步法",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [
+    "AI能力边界与误区"
+   ],
+   "post": [
+    "岗位任务转智能体",
+    "Skill输入处理输出设计"
+   ],
+   "related": [],
+   "tags": "重点;难点",
+   "objective": "能够运用'目标定义→素材输入→约束说明→分步执行→验收优化'五步法完成一次岗位任务拆解练习",
+   "description": "依据模块02。解读：五步法是把人机协作流程化的方法论主线。应用：任何AI任务先走五步再要结果。易错：跳过目标定义与验收，直接要答案。"
+  },
+  {
+   "name": "模块03-04 Agent与AIGC",
+   "level": 3,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "Agent与知识库构建",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [
+    "保密红线与合规意识"
+   ],
+   "post": [
+    "岗位任务转智能体",
+    "Skill概念与价值"
+   ],
+   "related": [],
+   "tags": "重点",
+   "objective": "能够把岗位资料切分喂料，构建一个含知识库的最小可行智能体",
+   "description": "依据模块03。解读：岗位任务转可复用智能体；知识库把业务资料变成AI可检索语料。应用：办公/业务场景喂料。易错：资料不切分、无索引导致答非所问。"
+  },
+  {
+   "name": "岗位任务转智能体",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "创造",
+   "pre": [
+    "人机协作五步法",
+    "Agent与知识库构建"
+   ],
+   "post": [
+    "Skill输入处理输出设计"
+   ],
+   "related": [],
+   "tags": "难点",
+   "objective": "能够从调研问卷的岗位高频任务出发，设计并交付一个本岗位最小可行智能体",
+   "description": "依据模块03。解读：把高频岗位任务抽象为固定流程+知识库的智能体。应用：从课前调研的岗位任务出发。易错：任务范围过宽，导致智能体不可用。"
+  },
+  {
+   "name": "新媒体AIGC应用",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [],
+   "post": [
+    "作品三选一实战"
+   ],
+   "related": [
+    "保密红线与合规意识"
+   ],
+   "tags": "重点",
+   "objective": "能够使用AI完成生图、生视频、生音乐各至少1例，合成一个AIGC素材包",
+   "description": "依据模块04。解读：AI生图（通配图/培训图解）、生视频（宣传/规范短视频）、生音乐（BGM）。应用：产出AIGC素材包。易错：忽略生成内容的版权与合规边界。"
+  },
+  {
+   "name": "DAY2 智能体与业务攻坚",
+   "level": 2,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "模块05-06 Skill与多Agent",
+   "level": 3,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "Skill概念与价值",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "概念性",
+   "cognitive": "理解",
+   "pre": [
+    "Agent与知识库构建"
+   ],
+   "post": [
+    "Skill输入处理输出设计"
+   ],
+   "related": [],
+   "tags": "重点",
+   "objective": "能够解释Skill与普通提示词的区别，并说出Skill在企业复利中的价值",
+   "description": "依据模块05。解读：把高频任务封装成'输入-处理-输出'可复用单元，越用越值。应用：从岗位高频任务出发选题。易错：把Skill当成一条普通提示词。"
+  },
+  {
+   "name": "Skill输入处理输出设计",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [
+    "Skill概念与价值",
+    "岗位任务转智能体"
+   ],
+   "post": [
+    "多Agent协作流程",
+    "VibeCoding自然语言开发"
+   ],
+   "related": [],
+   "tags": "难点",
+   "objective": "能够为自建Skill明确输入字段、处理逻辑与输出格式，并通过测试用例验证",
+   "description": "依据模块05。解读：输入字段、处理逻辑、输出格式三要素决定Skill可用性。应用：设计并测试自建Skill。易错：输入输出定义模糊，测试无标准。"
+  },
+  {
+   "name": "多Agent协作流程",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "分析",
+   "pre": [
+    "Skill输入处理输出设计"
+   ],
+   "post": [
+    "数据统计与批量核对方案",
+    "专家团机制"
+   ],
+   "related": [
+    "专家团机制"
+   ],
+   "tags": "难点",
+   "objective": "能够把一个跨部门任务拆解为多Agent分工协作流程，并绘制协作流程图",
+   "description": "依据模块06。解读：跨部门任务拆解为多Agent分工协作，流程编排示范。应用：专家团机制配合评审。易错：拆解粒度不当导致衔接断裂。"
+  },
+  {
+   "name": "专家团机制",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "概念性",
+   "cognitive": "理解",
+   "pre": [
+    "多Agent协作流程"
+   ],
+   "post": [
+    "成果展示与点评复盘"
+   ],
+   "related": [],
+   "tags": "",
+   "objective": "能够说出专家团机制的原理，并举例说明其用于方案评审的场景",
+   "description": "依据模块06。解读：让多个AI扮演不同领域专家共同评审方案。应用：方案评审与风险检查。易错：专家角色与任务不匹配，评审失真。"
+  },
+  {
+   "name": "模块07-08 痛点攻坚",
+   "level": 3,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "数据统计与批量核对方案",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [
+    "多Agent协作流程"
+   ],
+   "post": [
+    "工作总结与汇报材料方案"
+   ],
+   "related": [],
+   "tags": "重点",
+   "objective": "能够演示agent解决数据统计与批量核对的完整链路，并分组仿做出一份方案原型",
+   "description": "依据模块07（痛点TOP1）。解读：用agent解决数据汇总、批量核对，演示完整链路。应用：分组仿做。易错：数据口径不一致导致核对失效。"
+  },
+  {
+   "name": "工作总结与汇报材料方案",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [
+    "数据统计与批量核对方案"
+   ],
+   "post": [
+    "作品三选一实战"
+   ],
+   "related": [],
+   "tags": "重点",
+   "objective": "能够搭建AI撰写工作总结与汇报材料的方案，并在分组实战中产出1份材料",
+   "description": "依据模块08（痛点TOP2）。解读：用AI生成总结与汇报框架，再人工校准事实。应用：搭建方案分组实战。易错：AI生成内容未经事实核验。"
+  },
+  {
+   "name": "DAY3 Vibe Coding与作品落地",
+   "level": 2,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "模块09-10 工作台与实战",
+   "level": 3,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "VibeCoding自然语言开发",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "应用",
+   "pre": [
+    "Skill输入处理输出设计"
+   ],
+   "post": [
+    "工作台与小工具原型"
+   ],
+   "related": [
+    "Agent与知识库构建"
+   ],
+   "tags": "重点;难点",
+   "objective": "能够用自然语言向AI描述需求，生成排程计算器、记录台账或数据看板等原型",
+   "description": "依据模块09。解读：用自然语言向AI描述需求，AI协助生成代码/原型。应用：排程计算器、记录台账、数据看板示范。易错：需求描述不清导致原型反复返工。"
+  },
+  {
+   "name": "工作台与小工具原型",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "程序性",
+   "cognitive": "创造",
+   "pre": [
+    "VibeCoding自然语言开发"
+   ],
+   "post": [
+    "作品三选一实战"
+   ],
+   "related": [],
+   "tags": "难点",
+   "objective": "能够把一类重复工作封装为可复用的小工具/工作台原型并演示",
+   "description": "依据模块09。解读：把重复工作做成工具，学员自建小工具。应用：从自身岗位重复任务选题。易错：一次性需求做成过度工程。"
+  },
+  {
+   "name": "作品三选一实战",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "元认知",
+   "cognitive": "创造",
+   "pre": [
+    "新媒体AIGC应用",
+    "工作总结与汇报材料方案",
+    "工作台与小工具原型"
+   ],
+   "post": [
+    "成果展示与点评复盘"
+   ],
+   "related": [],
+   "tags": "重点",
+   "objective": "能够三选一（Agent工作流/组合型AI产品/Vibe Coding作品集网站）产出1件可演示作品",
+   "description": "依据模块10。解读：A.Agent工作流 / B.组合型AI产品 / C.Vibe Coding作品集网站（展示AIGC素材）。应用：综合实战。易错：贪大求全，作品不可演示。"
+  },
+  {
+   "name": "模块11-12 展示与复盘",
+   "level": 3,
+   "node_type": "分类",
+   "category": "",
+   "cognitive": "",
+   "pre": [],
+   "post": [],
+   "related": [],
+   "tags": "",
+   "objective": "",
+   "description": ""
+  },
+  {
+   "name": "成果展示与点评复盘",
+   "level": 4,
+   "node_type": "知识点",
+   "category": "元认知",
+   "cognitive": "评价",
+   "pre": [
+    "作品三选一实战"
+   ],
+   "post": [],
+   "related": [
+    "专家团机制"
+   ],
+   "tags": "",
+   "objective": "能够按评分标准演示作品，接受讲师点评与学员互评，并制定30天行动计划",
+   "description": "依据模块11-12。解读：评分标准说明、演示要点与时间控制、分组展示+讲师点评+学员互评。应用：作品汇编成《企业AI应用案例集》。易错：复盘流于形式，无行动项。"
+  }
+ ],
+ "flow": {
+  "structure": "five_stage",
+  "pre_class": {
+   "content": "课前调研：收集学员岗位高频任务与TOP痛点；预置3组脱敏业务样例；开通AI工具账号",
+   "student_activity": "填写课前调研问卷，列出自己岗位3个高频任务",
+   "teacher_activity": "汇总调研结果，确定攻坚TOP痛点，准备分组名单与练习素材",
+   "design_intent": "让培训内容对准真实岗位，第1天即进入'带着问题学'状态"
+  },
+  "in_class": [
+   {
+    "stage": "导入",
+    "role": "intro",
+    "duration_minutes": 67.5,
+    "content": "模块01·AI通识与认知奠基（9:00-10:30，1.5学时）：AI能做什么/不能做什么、制造应用全景、人机协作思维、保密红线、调研反馈与分组。产出：课题方向卡",
+    "student_activity": "完成'能/不能'清单练习，认领课题方向，反馈岗位痛点",
+    "teacher_activity": "讲授AI能力边界与保密红线，公布调研结果并完成分组",
+    "design_intent": "统一认知基线：AI不是万能工具，人是责任主体；用课题方向卡锚定学员个体目标",
+    "knowledge_refs": [
+     "AI能力边界与误区",
+     "保密红线与合规意识"
+    ]
+   },
+   {
+    "stage": "新授·人机协作与Agent实战",
+    "role": "instruction",
+    "duration_minutes": 123.75,
+    "content": "模块02-03·人机协作五步法与Agent实战（10:45-12:00五步法拆解，14:00-15:30 Agent与知识库，共2.75学时）：目标定义→素材输入→约束说明→分步执行→验收优化；岗位任务转可复用智能体；知识库构建与喂料。产出：练习记录、本岗位最小可行智能体（含知识库）",
+    "student_activity": "用五步法拆解1个岗位任务并记录；把岗位资料切分喂料，搭建最小可行智能体",
+    "teacher_activity": "示范五步法拆解全过程；演示知识库构建与喂料，逐组辅导智能体搭建",
+    "design_intent": "先给方法论主线，再给工具落地，让学员第1天就带走'自己的智能体'，建立成就感",
+    "knowledge_refs": [
+     "人机协作五步法",
+     "Agent与知识库构建",
+     "岗位任务转智能体"
+    ]
+   },
+   {
+    "stage": "新授·AIGC与Skill、多Agent",
+    "role": "instruction",
+    "duration_minutes": 180,
+    "content": "模块04-06·AIGC与Skill、多Agent协作（15:45-17:00 AIGC，DAY2 9:00-10:30 Skill专题，10:45-12:00 多Agent，共4学时）：AI生图/生视频/生音乐；Skill概念与自建；跨部门任务拆解为多Agent协作流程、专家团机制。产出：AIGC素材包、自建Skill 1个、协作流程图+体验记录",
+    "student_activity": "生成AIGC素材包；按输入/处理/输出设计并测试自建Skill；分组拆解跨部门任务并绘制协作流程图",
+    "teacher_activity": "示范生图/生视频/生音乐；讲解Skill三要素并现场测试；演示多Agent流程编排与专家团评审",
+    "design_intent": "从'单点工具'升级到'可复用能力'：Skill与多Agent是把个人效率变成组织能力的桥梁",
+    "knowledge_refs": [
+     "新媒体AIGC应用",
+     "Skill概念与价值",
+     "Skill输入处理输出设计",
+     "多Agent协作流程",
+     "专家团机制"
+    ]
+   },
+   {
+    "stage": "互动练习",
+    "role": "practice",
+    "duration_minutes": 247.5,
+    "content": "模块07-10·痛点攻坚与Vibe Coding实战（DAY2 14:00-17:00两大痛点，DAY3 9:00-10:30工作台，10:45-12:00作品实战，共5.5学时）：痛点TOP1「数据统计与批量核对」完整链路演示+分组仿做；痛点TOP2「工作总结与汇报材料撰写」分组实战；Vibe Coding打造专属工作台；作品三选一（Agent工作流/组合型AI产品/Vibe Coding作品集网站）。产出：2个解决方案原型、工作台/小工具原型、1件可演示作品",
+    "student_activity": "分组仿做两大痛点方案；用自然语言生成工作台原型；三选一完成综合实战作品",
+    "teacher_activity": "演示痛点①完整链路并分组辅导；组织痛点②实战；示范Vibe Coding三个样例，逐个作品把关可演示性",
+    "design_intent": "把前两天的知识与工具在真实业务痛点上练一遍，'会演示'过渡到'能落地'，完成从输入到作品的闭环",
+    "knowledge_refs": [
+     "数据统计与批量核对方案",
+     "工作总结与汇报材料方案",
+     "VibeCoding自然语言开发",
+     "工作台与小工具原型",
+     "作品三选一实战"
+    ]
+   },
+   {
+    "stage": "小结作业",
+    "role": "summary",
+    "duration_minutes": 123.75,
+    "content": "模块11-12·成果展示与复盘（14:00-15:30展示准备，15:45-17:00展示点评，共2.75学时）：评分标准说明、演示要点与时间控制、作品最终打磨；分组展示+讲师点评+学员互评；30天行动计划；作品汇编留存。产出：展示材料就绪、人人有作品、《企业AI应用案例集》",
+    "student_activity": "按评分标准打磨并演示作品，参与互评，制定个人30天行动计划",
+    "teacher_activity": "说明评分标准，组织路演评比，点评复盘并汇总作品汇编成册",
+    "design_intent": "用路演评比制造'交付压力'，用30天行动计划把3天培训转化为持续生产力，避免'培训完就凉'",
+    "knowledge_refs": [
+     "成果展示与点评复盘"
+    ]
+   }
+  ],
+  "post_class": {
+   "content": "30天行动计划落地：每周完成1个岗位AI应用小成果；作品汇编入《企业AI应用案例集》并持续迭代",
+   "student_activity": "按行动计划每周产出1个岗位AI应用小成果，同步到案例集",
+   "teacher_activity": "建立30天跟进群按周答疑，收集作品汇编成册",
+   "design_intent": "把培训成果沉淀为组织资产：案例集既是成果展示，也是新员工培训素材"
+  }
+ },
+ "reflection": {
+  "status": "pre_class",
+  "effect": "待课后填写：记录作品、自建Skill、智能体和痛点方案的实际完成数量与验收结果",
+  "diagnosis": "待课后填写：记录岗位任务拆解、多Agent理解等环节的真实卡点",
+  "improvement": "待课后填写：依据学员作品、练习记录和反馈确定下一轮脚手架改进",
+  "evidence": ""
+ },
+ "glossary": [
+  {
+   "term": "AI Agent（智能体）",
+   "definition": "能自主完成'感知-决策-执行'闭环的AI应用，可处理多步骤任务"
+  },
+  {
+   "term": "知识库",
+   "definition": "把岗位资料切分后喂给AI，供其检索回答或生成的结构化语料库"
+  },
+  {
+   "term": "Skill",
+   "definition": "封装'输入-处理-输出'三要素的可复用AI能力单元，越用越值"
+  },
+  {
+   "term": "人机协作五步法",
+   "definition": "目标定义→素材输入→约束说明→分步执行→验收优化"
+  },
+  {
+   "term": "Vibe Coding",
+   "definition": "用自然语言向AI描述需求，由AI生成代码或原型的开发方式"
+  },
+  {
+   "term": "提示词（Prompt）",
+   "definition": "向AI下达任务的自然语言指令，质量决定输出质量"
+  },
+  {
+   "term": "多Agent协作",
+   "definition": "多个智能体分工协作，完成跨部门、跨环节的复杂任务"
+  },
+  {
+   "term": "专家团机制",
+   "definition": "让多个AI扮演不同领域专家，共同评审方案或交叉检查风险"
+  }
+ ]
+}</script>
+<script>
+(function () {
+  "use strict";
+  var data = JSON.parse(document.getElementById("lesson-data").textContent);
+  var nodes = Array.isArray(data.knowledge_tree) ? data.knowledge_tree : [];
+  var meta = data.lesson_meta || {};
+  var objectives = data.objectives || {};
+  var flow = data.flow || {};
+  var stages = Array.isArray(flow.in_class) ? flow.in_class : [];
+  var glossary = Array.isArray(data.glossary) ? data.glossary : [];
+  var bloom = {
+    "记忆": "#64748B", "理解": "#0284C7", "应用": "#059669",
+    "分析": "#B45309", "评价": "#C2410C", "创造": "#BE123C"
+  };
+  var rhythmColors = ["#1e5a5e", "#2b7774", "#47948a", "#76aa96", "#c19a53", "#aab7b2"];
+  var groupLabels = { knowledge: "知识", ability: "能力", quality: "素质" };
+
+  function esc(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+    });
+  }
+  function safe(value, fallback) { return value ? esc(value) : (fallback || "—"); }
+  function objText(item) { return typeof item === "string" ? item : String((item && item.text) || ""); }
+  function objRefs(item) { return item && Array.isArray(item.knowledge_refs) ? item.knowledge_refs : []; }
+  function allObjectives() {
+    var result = [];
+    ["knowledge", "ability", "quality"].forEach(function (group) {
+      (Array.isArray(objectives[group]) ? objectives[group] : []).forEach(function (item) {
+        result.push({ group: group, text: objText(item), refs: objRefs(item) });
+      });
+    });
+    return result;
+  }
+  function relationCount() {
+    var count = 0;
+    nodes.forEach(function (node) {
+      ["pre", "post", "related"].forEach(function (key) {
+        if (Array.isArray(node[key])) count += node[key].length;
+      });
+    });
+    return count;
+  }
+  function buildTree(list) {
+    var stack = [], roots = [];
+    list.forEach(function (node) {
+      while (stack.length && stack[stack.length - 1].level >= node.level) stack.pop();
+      if (stack.length) {
+        var parent = stack[stack.length - 1];
+        (parent.children = parent.children || []).push(node);
+      } else { roots.push(node); }
+      stack.push(node);
+    });
+    return roots;
+  }
+
+  document.title = (meta.title || "课程") + " · 知识图谱";
+  document.getElementById("page-title").textContent = meta.title || "课程知识图谱";
+  document.getElementById("hero-sub").textContent = [meta.course_name, meta.course_type].filter(Boolean).join(" · ") || "结构化的课程知识与课堂设计";
+  document.getElementById("hero-chips").innerHTML = [
+    ["week", meta.week], ["course", meta.course_name], ["hours", meta.hours ? meta.hours + " 学时" : ""],
+    ["class", meta.class_name], ["teacher", meta.teacher]
+  ].filter(function (pair) { return pair[1]; }).map(function (pair) {
+    return '<span class="chip' + (pair[0] === "week" ? " gold" : "") + '">' + esc(pair[1]) + "</span>";
+  }).join("");
+
+  var objectiveRows = allObjectives();
+  document.getElementById("stat-nodes").textContent = nodes.filter(function (n) { return n.node_type === "知识点"; }).length;
+  document.getElementById("stat-relations").textContent = relationCount();
+  document.getElementById("stat-objectives").textContent = objectiveRows.length;
+  var totalMinutes = stages.reduce(function (sum, stage) { return sum + (Number(stage.duration_minutes) || 0); }, 0);
+  document.getElementById("stat-minutes").textContent = Number.isInteger(totalMinutes) ? totalMinutes : totalMinutes.toFixed(1);
+
+  var metaRows = [
+    ["课程", meta.course_name], ["课题", meta.title], ["周次", meta.week], ["学时", meta.hours],
+    ["授课班级", meta.class_name], ["授课教师", meta.teacher], ["授课日期", meta.date], ["课型", meta.course_type]
+  ].filter(function (pair) { return pair[1]; });
+  document.getElementById("course-meta").innerHTML = metaRows.map(function (pair) {
+    return "<div class=\"meta-row\"><dt>" + esc(pair[0]) + "</dt><dd>" + esc(pair[1]) + "</dd></div>";
+  }).join("") || '<div class="empty">暂无课程信息</div>';
+
+  var rhythmTotal = totalMinutes || 1;
+  document.getElementById("rhythm-bar").innerHTML = stages.map(function (stage, index) {
+    var minutes = Number(stage.duration_minutes) || 0;
+    return '<span class="rhythm-seg" title="' + esc(stage.stage) + " " + minutes + ' 分钟" style="width:' +
+      (minutes / rhythmTotal * 100).toFixed(2) + "%;background:" + rhythmColors[index % rhythmColors.length] + '"></span>';
+  }).join("");
+  document.getElementById("rhythm-list").innerHTML = stages.map(function (stage, index) {
+    return '<div class="rhythm-row"><span><i class="legend-dot" style="display:inline-block;margin-right:6px;background:' +
+      rhythmColors[index % rhythmColors.length] + '"></i>' + safe(stage.stage) + "</span><span>" +
+      (Number(stage.duration_minutes) || 0) + " min</span></div>";
+  }).join("") || '<div class="empty">暂无课中环节</div>';
+  document.getElementById("flow-total").textContent = (Number.isInteger(totalMinutes) ? totalMinutes : totalMinutes.toFixed(1)) + " 分钟";
+
+  document.getElementById("objective-summary").innerHTML = ["knowledge", "ability", "quality"].map(function (group) {
+    var items = Array.isArray(objectives[group]) ? objectives[group] : [];
+    if (!items.length) return "";
+    return '<div class="objective-group"><div class="objective-label">' + groupLabels[group] + '目标</div>' +
+      items.map(function (item) {
+        var refs = objRefs(item);
+        return '<div class="objective-item">' + esc(objText(item)) +
+          (refs.length ? '<span class="objective-refs">关联 ' + esc(refs.join(" / ")) + "</span>" : "") + "</div>";
+      }).join("") + "</div>";
+  }).join("") || '<div class="empty">暂无教学目标</div>';
+
+  var roots = buildTree(nodes);
+  function renderNode(node) {
+    var children = Array.isArray(node.children) ? node.children : [];
+    var isCategory = node.node_type === "分类";
+    var search = [node.name, node.category, node.cognitive, node.tags, node.description, node.objective].join(" ").toLowerCase();
+    var color = bloom[node.cognitive] || "#0f766e";
+    var pills = "";
+    if (node.cognitive) pills += '<span class="pill bloom" style="background:' + color + '">' + esc(node.cognitive) + "</span>";
+    if (node.category) pills += '<span class="pill kind">' + esc(node.category) + "</span>";
+    if (node.tags) String(node.tags).split(";").filter(Boolean).forEach(function (tag) {
+      pills += '<span class="pill tag">' + esc(tag) + "</span>";
+    });
+    var toggle = children.length ? '<button type="button" class="branch-toggle" aria-expanded="true" aria-label="折叠或展开分类">▼</button>' :
+      '<span class="branch-toggle" aria-hidden="true"></span>';
+    var mark = isCategory ? '<span class="node-mark"></span>' : '<span class="node-mark" style="background:' + color + ';box-shadow:0 0 0 3px ' + color + '18"></span>';
+    var title = isCategory
+      ? '<span class="node-title" tabindex="0">' + esc(node.name) + "</span>"
+      : '<button type="button" class="node-title detail-toggle" aria-expanded="false">' + esc(node.name) + "</button>";
+    var detail = "";
+    if (!isCategory) {
+      var rels = "";
+      [["pre", "前置"], ["post", "后置"], ["related", "关联"]].forEach(function (pair) {
+        if (Array.isArray(node[pair[0]]) && node[pair[0]].length) {
+          rels += '<span class="rel-pill"><b>' + pair[1] + "</b> " + esc(node[pair[0]].join(" / ")) + "</span>";
+        }
+      });
+      detail = '<div class="node-detail" hidden><div class="detail-objective">' + safe(node.objective, "待补教学目标") + "</div>" +
+        (node.description ? '<div class="detail-desc">' + esc(node.description) + "</div>" : "") +
+        (rels ? '<div class="relations">' + rels + "</div>" : "") + "</div>";
+    }
+    return '<div class="node' + (children.length ? " has-children" : "") + '" data-search="' + esc(search) + '" data-name="' + esc(node.name) + '">' +
+      '<div class="node-row ' + (isCategory ? "is-category" : "is-knowledge") + '">' + toggle + mark +
+      '<div class="node-copy">' + title + (pills ? '<div class="node-meta">' + pills + "</div>" : "") + "</div>" +
+      '<span class="node-level">L' + esc(node.level) + "</span></div>" + detail +
+      (children.length ? '<div class="children">' + children.map(renderNode).join("") + "</div>" : "") + "</div>";
+  }
+  document.getElementById("tree-root").innerHTML = roots.map(renderNode).join("") || '<div class="empty">暂无知识节点</div>';
+  document.getElementById("legend").innerHTML = '<span class="legend-item"><i class="legend-dot" style="background:#0f766e"></i>分类节点</span>' +
+    '<span class="legend-item muted">知识点按布鲁姆认知层级标注：</span>' +
+    Object.keys(bloom).map(function (key) {
+      return '<span class="legend-item"><i class="legend-dot" style="background:' + bloom[key] + '"></i>' + key + "</span>";
+    }).join("");
+
+  var relationRows = nodes.filter(function (n) { return n.node_type === "知识点"; });
+  document.getElementById("relation-body").innerHTML = relationRows.map(function (node) {
+    function values(key) { return Array.isArray(node[key]) && node[key].length ? esc(node[key].join("; ")) : '<span class="muted">—</span>'; }
+    return "<tr><td class=\"name-cell\">" + esc(node.name) + "</td><td>" + values("pre") + "</td><td>" +
+      values("post") + "</td><td>" + values("related") + "</td><td>" + safe(node.cognitive) + "</td><td>" + safe(node.category) + "</td></tr>";
+  }).join("") || '<tr><td colspan="6" class="empty">暂无知识点关系</td></tr>';
+
+  document.getElementById("objective-body").innerHTML = objectiveRows.map(function (row) {
+    return "<tr><td>" + groupLabels[row.group] + "</td><td>" + esc(row.text) + "</td><td>" +
+      (row.refs.length ? esc(row.refs.join(" / ")) : '<span class="muted">未绑定</span>') + "</td></tr>";
+  }).join("") || '<tr><td colspan="3" class="empty">暂无教学目标</td></tr>';
+
+  document.getElementById("glossary-body").innerHTML = glossary.map(function (item) {
+    return '<div class="glossary-item"><dt>' + safe(item.term) + "</dt><dd>" + safe(item.definition) + "</dd></div>";
+  }).join("") || '<div class="empty">暂无术语</div>';
+
+  var knowledgeMap = {};
+  nodes.forEach(function (node) { if (node.node_type === "知识点") knowledgeMap[node.name] = node; });
+
+  function asideOverview() {
+    var counts = { "记忆": 0, "理解": 0, "应用": 0, "分析": 0, "评价": 0, "创造": 0 };
+    nodes.forEach(function (node) { if (node.node_type === "知识点" && counts[node.cognitive] !== undefined) counts[node.cognitive] += 1; });
+    var max = Math.max.apply(null, Object.keys(counts).map(function (key) { return counts[key]; }).concat([1]));
+    return '<div class="aside-kicker">STRUCTURE READING</div><h3>从结构看这堂课</h3>' +
+      '<p class="aside-copy">先沿分类展开知识层级，再点击任一知识点，查看它对应的可衡量目标、教学说明与知识依赖。共 ' +
+      nodes.filter(function (n) { return n.node_type === "知识点"; }).length + ' 个知识点，按布鲁姆认知层级分布如下。</p>' +
+      '<div class="bloom-bars">' + Object.keys(counts).map(function (key) {
+        return '<div class="bloom-bar-row"><span>' + key + '</span><span class="bloom-track"><i class="bloom-fill" style="width:' +
+          (counts[key] / max * 100) + '%;background:' + bloom[key] + '"></i></span><span>' + counts[key] + "</span></div>";
+      }).join("") + "</div>";
+  }
+
+  function asideNode(name) {
+    var node = knowledgeMap[name];
+    if (!node) return;
+    var rels = "";
+    [["pre", "前置知识"], ["post", "后续知识"], ["related", "关联知识"]].forEach(function (pair) {
+      if (Array.isArray(node[pair[0]]) && node[pair[0]].length) {
+        rels += '<span class="aside-label">' + pair[1] + '</span><div class="aside-relation">' + esc(node[pair[0]].join(" · ")) + "</div>";
+      }
+    });
+    document.getElementById("tree-aside").innerHTML = '<div class="aside-kicker">SELECTED NODE</div><h3>' +
+      esc(node.name) + '</h3><p class="aside-copy">' + esc(node.description || "暂无节点说明。") + "</p>" +
+      '<div class="aside-block"><span class="aside-label">可衡量目标</span><div class="aside-relation">' +
+      esc(node.objective || "待补充") + "</div></div>" +
+      (rels ? '<div class="aside-block">' + rels + "</div>" : "") +
+      '<div class="aside-block"><span class="aside-label">认知层级 / 分类</span><div class="aside-relation">' +
+      esc(node.cognitive || "—") + " / " + esc(node.category || "—") + "</div></div>";
+  }
+  document.getElementById("tree-aside").innerHTML = asideOverview();
+
+  document.getElementById("tree-root").addEventListener("click", function (event) {
+    var branch = event.target.closest(".branch-toggle");
+    if (branch && branch.tagName === "BUTTON") {
+      var wrapper = branch.closest(".node").querySelector(":scope > .children");
+      if (wrapper) {
+        var willOpen = wrapper.classList.contains("collapsed");
+        wrapper.classList.toggle("collapsed", !willOpen);
+        branch.setAttribute("aria-expanded", String(willOpen));
+      }
+      return;
+    }
+    var detailToggle = event.target.closest(".detail-toggle");
+    if (detailToggle) {
+      var detail = detailToggle.closest(".node").querySelector(":scope > .node-detail");
+      if (detail) {
+        detail.hidden = !detail.hidden;
+        detailToggle.setAttribute("aria-expanded", String(!detail.hidden));
+      }
+      var nodeWrapper = detailToggle.closest(".node");
+      if (nodeWrapper && nodeWrapper.getAttribute("data-name")) asideNode(nodeWrapper.getAttribute("data-name"));
+    }
+  });
+
+  document.getElementById("expand-all").addEventListener("click", function () {
+    document.querySelectorAll(".children.collapsed").forEach(function (el) { el.classList.remove("collapsed"); });
+    document.querySelectorAll(".branch-toggle[aria-expanded]").forEach(function (el) { el.setAttribute("aria-expanded", "true"); });
+  });
+  document.getElementById("collapse-all").addEventListener("click", function () {
+    document.querySelectorAll(".children").forEach(function (el) { el.classList.add("collapsed"); });
+    document.querySelectorAll(".branch-toggle[aria-expanded]").forEach(function (el) { el.setAttribute("aria-expanded", "false"); });
+    document.querySelectorAll(".node-detail").forEach(function (el) { el.hidden = true; });
+    document.querySelectorAll(".detail-toggle").forEach(function (el) { el.setAttribute("aria-expanded", "false"); });
+  });
+
+  document.getElementById("tree-search").addEventListener("input", function (event) {
+    var query = event.target.value.trim().toLowerCase();
+    var allNodes = Array.prototype.slice.call(document.querySelectorAll("#tree-root .node"));
+    allNodes.forEach(function (node) {
+      var isKnowledge = !!node.querySelector(":scope > .node-row.is-knowledge");
+      if (!isKnowledge) return;
+      node.classList.toggle("hidden", !!query && node.getAttribute("data-search").indexOf(query) === -1);
+    });
+    allNodes.slice().reverse().forEach(function (node) {
+      if (!node.querySelector(":scope > .node-row.is-category")) return;
+      var ownMatch = node.getAttribute("data-search").indexOf(query) !== -1;
+      var visibleChild = !!node.querySelector(":scope > .children > .node:not(.hidden)");
+      node.classList.toggle("hidden", !!query && !ownMatch && !visibleChild);
+      if (query && visibleChild) {
+        var children = node.querySelector(":scope > .children");
+        if (children) children.classList.remove("collapsed");
+      }
+    });
+    var visibleLeaves = document.querySelectorAll("#tree-root .node-row.is-knowledge").length -
+      document.querySelectorAll("#tree-root .node.hidden .node-row.is-knowledge").length;
+    document.getElementById("tree-empty").classList.toggle("hidden", !query || visibleLeaves > 0);
+  });
+})();
+</script>
+</body>
+</html>

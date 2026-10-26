@@ -2,4 +2,10 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+.pytest_cache/
+.preview/
+output/
+dist/
+*.log
 rejected-notes.md
+.ruff_cache/

@@ -1,0 +1,134 @@
+{
+  "template_version": "1.0",
+  "template_file": "学校样本_教案模板.docx",
+  "generated_by": "analyze_template.py（自动推断，需教师确认一次）",
+  "confirmed": true,
+  "fields": {
+    "lesson_meta.course_name": {
+      "kind": "cell",
+      "table": 0,
+      "row": 0,
+      "col": 1
+    },
+    "lesson_meta.credits": {
+      "kind": "cell",
+      "table": 0,
+      "row": 0,
+      "col": 3,
+      "empty": "—"
+    },
+    "lesson_meta.title": {
+      "kind": "cell",
+      "table": 0,
+      "row": 1,
+      "col": 1
+    },
+    "lesson_meta.class_name": {
+      "kind": "cell",
+      "table": 0,
+      "row": 1,
+      "col": 3
+    },
+    "lesson_meta.teacher": {
+      "kind": "cell",
+      "table": 0,
+      "row": 2,
+      "col": 1,
+      "empty": "—"
+    },
+    "lesson_meta.week": {
+      "kind": "cell",
+      "table": 0,
+      "row": 2,
+      "col": 3
+    },
+    "lesson_meta.hours": {
+      "kind": "cell",
+      "table": 0,
+      "row": 3,
+      "col": 1
+    },
+    "lesson_meta.course_type": {
+      "kind": "cell",
+      "table": 0,
+      "row": 3,
+      "col": 3
+    },
+    "lesson_meta.date": {
+      "kind": "cell",
+      "table": 0,
+      "row": 4,
+      "col": 1
+    },
+    "objectives.knowledge": {
+      "kind": "cell",
+      "table": 1,
+      "row": 0,
+      "col": 1
+    },
+    "objectives.ability": {
+      "kind": "cell",
+      "table": 1,
+      "row": 1,
+      "col": 1
+    },
+    "objectives.quality": {
+      "kind": "cell",
+      "table": 1,
+      "row": 2,
+      "col": 1
+    },
+    "key_points": {
+      "kind": "cell",
+      "table": 2,
+      "row": 0,
+      "col": 1
+    },
+    "difficult_points": {
+      "kind": "cell",
+      "table": 2,
+      "row": 1,
+      "col": 1
+    },
+    "reflection.effect": {
+      "kind": "cell",
+      "table": 4,
+      "row": 0,
+      "col": 1
+    },
+    "reflection.diagnosis": {
+      "kind": "cell",
+      "table": 4,
+      "row": 1,
+      "col": 1
+    },
+    "reflection.improvement": {
+      "kind": "cell",
+      "table": 4,
+      "row": 2,
+      "col": 1
+    },
+    "student_analysis": {
+      "kind": "paragraph",
+      "index": 6
+    }
+  },
+  "blocks": {
+    "in_class": {
+      "table": 3,
+      "template_row": 1,
+      "last_row": 1,
+      "columns": {
+        "content": 1,
+        "student_activity": 2,
+        "teacher_activity": 3,
+        "design_intent": 4,
+        "stage_with_duration": 0
+      },
+      "source": "in_class",
+      "repeat_header": true,
+      "keep_row_together": true
+    }
+  },
+  "note": "示意样本的映射，已由测试核对；真实学校样本请自行核对后置 confirmed=true。"
+}

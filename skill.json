@@ -1,18 +1,24 @@
 {
-  "name": "lesson-plan-assistant",
-  "version": "1.1.0",
-  "description": "备课知识图谱助手：输入课题+周次+要点，一键产出标准教案 docx、Markdown 知识图谱、HTML 交互信息图三件套；支持 --style teacher-zhang 教师风格档案驱动，输出与用户历史教案同风格的成品。同源同构、硬校验保证教案与图谱知识点一致。",
-  "author": "doubao-agent",
+  "name": "hb-lesson-plan-assistant",
+  "version": "2.2.4",
+  "schema_version": "2.0",
+  "description": "将课题、周次、学时与教学要点结构化，并同源生成可编辑教案 DOCX、Markdown 知识图谱和离线 HTML 课程看板；可按学校提供的 Word 样本严格复刻版式。包含目标—知识点绑定、课堂时长、五环节四维、反思真实性校验、模板映射与独立成品验收。",
+  "author": "黄彬",
   "license": "MIT",
   "imports": [],
   "files": {
     "SKILL.md": "./SKILL.md",
+    "README.md": "./README.md",
+    "CHANGELOG.md": "./CHANGELOG.md",
+    "LICENSE": "./LICENSE",
+    "requirements.txt": "./requirements.txt",
     "references/lesson-json-schema.md": "./references/lesson-json-schema.md",
     "references/extraction-prompt.md": "./references/extraction-prompt.md",
     "references/quality-checklist.md": "./references/quality-checklist.md",
     "references/standard-lesson-template.md": "./references/standard-lesson-template.md",
     "references/teacher-style.json": "./references/teacher-style.json",
     "references/teacher-style-profile.md": "./references/teacher-style-profile.md",
+    "references/template-mapping.md": "./references/template-mapping.md",
     "scripts/lesson_assistant.py": "./scripts/lesson_assistant.py",
     "scripts/common.py": "./scripts/common.py",
     "scripts/verify_consistency.py": "./scripts/verify_consistency.py",
@@ -20,13 +26,37 @@
     "scripts/render_html.py": "./scripts/render_html.py",
     "scripts/build_lesson_docx.py": "./scripts/build_lesson_docx.py",
     "scripts/audit_artifacts.py": "./scripts/audit_artifacts.py",
+    "scripts/docx_template.py": "./scripts/docx_template.py",
+    "scripts/analyze_template.py": "./scripts/analyze_template.py",
     "templates/knowledge-graph.html": "./templates/knowledge-graph.html",
     "examples/stack_queue/lesson.json": "./examples/stack_queue/lesson.json",
     "examples/ai_training/lesson.json": "./examples/ai_training/lesson.json",
-    "examples/ai_generative_art/lesson.json": "./examples/ai_generative_art/lesson.json"
+    "examples/ai_generative_art/lesson.json": "./examples/ai_generative_art/lesson.json",
+    "tests/test_validation.py": "./tests/test_validation.py",
+    "tests/test_pipeline.py": "./tests/test_pipeline.py",
+    "tests/test_html_ui.py": "./tests/test_html_ui.py",
+    "tests/test_template.py": "./tests/test_template.py",
+    "tests/template_fixture.py": "./tests/template_fixture.py",
+    "examples/school-template/学校样本_教案模板.docx": "./examples/school-template/学校样本_教案模板.docx",
+    "examples/school-template/学校样本_教案模板_template-map.json": "./examples/school-template/学校样本_教案模板_template-map.json",
+    "tests/test_template_units.py": "./tests/test_template_units.py",
+    "examples/reference-lesson/参考教案_3天培训.docx": "./examples/reference-lesson/参考教案_3天培训.docx",
+    "examples/reference-lesson/参考教案_3天培训_template-map.json": "./examples/reference-lesson/参考教案_3天培训_template-map.json",
+    "tests/test_skill_meta.py": "./tests/test_skill_meta.py"
   },
   "runtime": {
     "python": "3.8+",
-    "pip": ["python-docx"]
+    "pip": [
+      "python-docx>=1.1.0,<2.0"
+    ]
+  },
+  "capabilities": {
+    "offline_html": true,
+    "docx": true,
+    "markdown": true,
+    "custom_style": true,
+    "docx_template_fill": true,
+    "automated_tests": 49,
+    "docx_units_fill": true
   }
 }

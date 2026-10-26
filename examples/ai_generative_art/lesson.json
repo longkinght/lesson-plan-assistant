@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "lesson_meta": {
     "week": "第1周",
     "chapter_num": "1",
@@ -7,30 +7,30 @@
     "course_name": "人工智能生成艺术",
     "hours": 3,
     "class_name": "",
-    "teacher": "张冬冬、黄彬",
+    "teacher": "示例教师",
     "date": "",
     "course_type": "理论课·案例教学",
-    "semester": "2025～2026学年第 一 学期",
-    "college": "传媒与设计艺术学院",
-    "department": "数字媒体艺术系",
+    "semester": "2025～2026学年第一学期",
+    "college": "示例学院",
+    "department": "数字媒体系",
     "credits": "3学分",
     "total_hours": "54学时",
     "weekly_hours": "3学时"
   },
   "objectives": {
     "knowledge": [
-      "理解人工智能基本概念与发展阶段",
-      "阐述AIGC的定义、分类及应用场景",
-      "列举生成模型的主要类型（GANs、VAEs、Diffusion Models、Transformers）"
+      { "text": "能够解释人工智能基本概念与发展阶段", "knowledge_refs": ["AI发展历程概览", "AI核心技术简介"] },
+      { "text": "能够阐述AIGC的定义、分类及应用场景", "knowledge_refs": ["AIGC定义与发展现状", "AIGC技术分类", "AIGC应用案例分析"] },
+      { "text": "能够列举生成模型的主要类型（GANs、VAEs、Diffusion Models、Transformers）", "knowledge_refs": ["生成模型概览"] }
     ],
     "ability": [
-      "能够结合艺术与设计领域分析至少1个AIGC应用案例",
-      "能够识别主流AIGC技术分类（文本、图像、音视频、多模态）",
-      "能够就AI伦理与版权议题提出自己的立场与理由"
+      { "text": "能够结合艺术与设计领域分析至少1个AIGC应用案例", "knowledge_refs": ["AIGC应用案例分析"] },
+      { "text": "能够识别主流AIGC技术分类（文本、图像、音视频、多模态）", "knowledge_refs": ["AIGC技术分类"] },
+      { "text": "能够就AI伦理与版权议题提出自己的立场与理由", "knowledge_refs": ["AI伦理与版权"] }
     ],
     "quality": [
-      "树立负责任的创新意识，明确课程学习路径与项目导向",
-      "养成关注AI伦理、版权与合规边界的职业习惯"
+      { "text": "树立负责任的创新意识，明确课程学习路径与项目导向", "knowledge_refs": ["AI伦理与版权"] },
+      { "text": "养成关注AI伦理、版权与合规边界的职业习惯", "knowledge_refs": ["AI伦理与版权"] }
     ]
   },
   "student_analysis": "大一/大二艺术设计类专业学生，视觉与创作能力强，但AI技术背景薄弱；对AI绘画有好奇，多数停留在'工具尝鲜'层面，缺乏对AIGC原理与边界的概念框架。本课作为导论，重在建立认知地图与学习期待，忌技术术语堆砌。",
@@ -214,6 +214,7 @@
     }
   ],
   "flow": {
+    "structure": "five_stage",
     "pre_class": {
       "content": "课前预习：阅读课程大纲与AIGC科普短文，注册体验一个AI绘画平台",
       "student_activity": "浏览课程大纲，用任意AI绘画平台生成1张图并记录感受",
@@ -223,6 +224,8 @@
     "in_class": [
       {
         "stage": "导入",
+        "role": "intro",
+        "duration_minutes": 15,
         "content": "课程介绍与学习目标（15分钟）；1. 课程介绍、学习目标与最终项目预览；2. 项目导向：本课程最终作品集要求",
         "student_activity": "了解课程框架与考核方式，记录个人学习目标",
         "teacher_activity": "讲解课程安排、项目导向与考核要求，展示往届作品",
@@ -230,7 +233,9 @@
         "knowledge_refs": ["AI发展历程概览"]
       },
       {
-        "stage": "新授",
+        "stage": "新授·AIGC概览与AI发展基石",
+        "role": "instruction",
+        "duration_minutes": 40,
         "content": "第一节 AIGC概览与AI发展基石（40分钟）；1. 人工智能(AI)发展历程概览（关键节点与突破）；2. AI核心技术简介：机器学习、深度学习基础概念",
         "student_activity": "跟随时间线梳理AI发展脉络，填写'三起两落'关键节点表",
         "teacher_activity": "讲授AI发展历程与核心概念，穿插交互提问确认理解",
@@ -238,7 +243,9 @@
         "knowledge_refs": ["AI发展历程概览", "AI核心技术简介"]
       },
       {
-        "stage": "新授",
+        "stage": "新授·生成模型与AIGC艺术设计初探",
+        "role": "instruction",
+        "duration_minutes": 40,
         "content": "第二节 生成模型与AIGC艺术设计初探（40分钟）；1. 生成模型概览：GANs、VAEs、Diffusion Models、Transformers（概念性介绍）；2. AIGC的定义与发展现状；3. AIGC在艺术与设计领域的应用案例分析",
         "student_activity": "对比四类生成模型特点，分组分析1个AIGC应用案例",
         "teacher_activity": "用类比讲解生成模型差异，展示AIGC应用案例并引导分析",
@@ -247,6 +254,8 @@
       },
       {
         "stage": "互动练习",
+        "role": "practice",
+        "duration_minutes": 25,
         "content": "第三节 AIGC技术分类与伦理基石（25分钟）；1. 主流AIGC技术分类详解（文本、图像、音视频、多模态）；2. 重要议题：AI伦理、版权问题与负责任的创新；3. 小组讨论：'AI生成的艺术品属于谁？'",
         "student_activity": "完成AIGC四类技术归类练习，参与伦理议题小组讨论并发表观点",
         "teacher_activity": "组织归类练习与伦理辩论，总结负责任的创新原则",
@@ -255,6 +264,8 @@
       },
       {
         "stage": "小结作业",
+        "role": "summary",
+        "duration_minutes": 15,
         "content": "课堂小结与作业布置（15分钟）；回顾知识地图：AI发展→生成模型→AIGC→伦理；布置思考题作业",
         "student_activity": "回顾本课知识地图，记录作业要求",
         "teacher_activity": "总结知识结构，说明思考题与作业提交要求",
@@ -270,9 +281,11 @@
     }
   },
   "reflection": {
-    "effect": "预期效果：全班完成AIGC案例作业，90%以上学生能正确归类四类生成模型与AIGC技术分类；学生对课程项目导向形成明确认知",
-    "diagnosis": "诊断：零基础学生易在'生成模型四类差异'处概念混淆；伦理讨论若无具体案例支撑易泛化空谈",
-    "improvement": "改进：生成模型差异改用'作画风格类比'（对抗式/重构式/去噪式/注意力式）；伦理环节预置2个真实版权争议案例供讨论"
+    "status": "pre_class",
+    "effect": "待课后填写：记录AIGC案例作业完成情况及技术分类练习结果",
+    "diagnosis": "待课后填写：记录生成模型概念混淆与伦理讨论的实际表现",
+    "improvement": "待课后填写：依据学生作品和课堂讨论记录调整案例与讲解方式",
+    "evidence": ""
   },
   "glossary": [
     {

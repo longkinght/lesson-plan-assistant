@@ -1,81 +1,100 @@
 # -*- coding: utf-8 -*-
-"""验收核查脚本：产物质量 + 同源一致性（独立路径回读）"""
+"""Audit the three rendered artifacts against their single source of truth."""
+import argparse
 import json
+import os
 import re
 import sys
 
-import docx
+from docx import Document
 
-base = sys.argv[1]
-print("=== 产物质量与同源一致性核查 ===")
-
-# 3.1 从 lesson.json 提取知识点集合
-with open(base + "/lesson.json", encoding="utf-8") as f:
-    data = json.load(f)
-json_nodes = [n["name"] for n in data["knowledge_tree"] if n["node_type"] == "知识点"]
-print(f"JSON 知识点节点数: {len(json_nodes)}")
-
-# 3.2 从 md 提取知识点（行内含 ［认知· 标记的即知识点）
-with open(base + "/第15周_知识图谱.md", encoding="utf-8") as f:
-    md = f.read()
-md_names = re.findall(r"^\s*- \*\*([^*]+)\*\* ［", md, re.M)
-md_nodes = [n.strip() for n in md_names]
-print(f"MD 知识点节点数: {len(md_nodes)}")
-
-# 3.3 从 html 内嵌 JSON 提取
-with open(base + "/第15周_知识图谱.html", encoding="utf-8") as f:
-    html = f.read()
-m = re.search(r'<script id="lesson-data" type="application/json">(.*?)</script>', html, re.S)
-hdata = json.loads(m.group(1))
-html_nodes = [n["name"] for n in hdata["knowledge_tree"] if n["node_type"] == "知识点"]
-script_part = html[: html.find("</script>")]
-print(f"HTML 知识点节点数: {len(html_nodes)}")
-print("HTML 内嵌数据含 children 字段:", '"children"' in script_part)
-
-# 3.4 从 docx 课中环节提取引用知识点
-d = docx.Document(base + "/第15周_教案.docx")
-refs = []
-for p in d.paragraphs:
-    t = p.text
-    if "（知识点：" in t:
-        refs.extend(t.split("（知识点：")[1].rstrip("）").split("、"))
-refs = [r.strip() for r in refs if r.strip()]
-print(f"DOCX 课中环节引用知识点数: {len(refs)}")
-
-# 3.5 一致性比对
-print("--- 一致性比对 ---")
-print("JSON==MD:", set(json_nodes) == set(md_nodes))
-print("JSON==HTML:", set(json_nodes) == set(html_nodes))
-print("教案引用 ⊆ 图谱节点:", set(refs) <= set(json_nodes))
-missing = set(refs) - set(json_nodes)
-print("教案引用缺失项:", missing if missing else "无")
-print(f"教案引用覆盖知识点比例: {len(set(refs)) / len(json_nodes) * 100:.0f}%")
-
-# 3.6 关键字段抽查
-cog_ok = all(
-    n.get("cognitive") in ["记忆", "理解", "应用", "分析", "评价", "创造"]
-    for n in data["knowledge_tree"]
-    if n["node_type"] == "知识点"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import (  # noqa: E402
+    LessonInputError, load_lesson, objective_items, objective_text,
+    safe_file_stem, validate_lesson,
 )
-obj_ok = all(
-    n.get("objective")
-    for n in data["knowledge_tree"]
-    if n["node_type"] == "知识点" and n["level"] >= 4
-)
-stages = data["flow"]["in_class"]
-four_dim_ok = all(
-    s.get(c)
-    for s in stages
-    for c in ["content", "student_activity", "teacher_activity", "design_intent"]
-)
-print("--- 字段抽查 ---")
-print("布鲁姆认知层级全部合法:", cog_ok)
-print("Level>=4 知识点目标全覆盖:", obj_ok)
-print(f"五环节×四维: 环节数={len(stages)}, 四维齐全={four_dim_ok}")
 
-# 3.7 脚本可复现性：重新生成并对比
-import subprocess
-subprocess.run([sys.executable, sys.argv[2], "--json", base + "/lesson.json",
-                "--output-dir", base], check=True, capture_output=True)
-print("--- 可复现性 ---")
-print("全流程重跑退出码: 0（成功）")
+
+def extract_html_data(html):
+    match = re.search(r'<script id="lesson-data" type="application/json">(.*?)</script>', html, re.S)
+    if not match:
+        raise ValueError("HTML 中缺少 lesson-data 数据块")
+    return json.loads(match.group(1))
+
+
+def audit(json_path, output_dir):
+    data = load_lesson(json_path)
+    errors, warnings = validate_lesson(data)
+    stem = safe_file_stem(data["lesson_meta"])
+    paths = {
+        "markdown": os.path.join(output_dir, stem + "_知识图谱.md"),
+        "html": os.path.join(output_dir, stem + "_知识图谱.html"),
+        "docx": os.path.join(output_dir, stem + "_教案.docx"),
+    }
+    checks = []
+    source_nodes = [node["name"] for node in data["knowledge_tree"] if node["node_type"] == "知识点"]
+
+    for kind, path in paths.items():
+        checks.append({"name": "%s 文件存在" % kind, "ok": os.path.isfile(path), "detail": path})
+
+    if os.path.isfile(paths["markdown"]):
+        with open(paths["markdown"], "r", encoding="utf-8") as f:
+            markdown = f.read()
+        missing = [name for name in source_nodes if name not in markdown]
+        checks.append({"name": "Markdown 覆盖全部知识点", "ok": not missing, "detail": ", ".join(missing) or "全部命中"})
+
+    if os.path.isfile(paths["html"]):
+        with open(paths["html"], "r", encoding="utf-8") as f:
+            html = f.read()
+        try:
+            embedded = extract_html_data(html)
+            html_nodes = [n["name"] for n in embedded.get("knowledge_tree", []) if n.get("node_type") == "知识点"]
+            checks.append({"name": "HTML 内嵌知识与源数据一致", "ok": html_nodes == source_nodes,
+                           "detail": "%d / %d" % (len(html_nodes), len(source_nodes))})
+        except (ValueError, json.JSONDecodeError) as exc:
+            checks.append({"name": "HTML 内嵌知识与源数据一致", "ok": False, "detail": str(exc)})
+
+    if os.path.isfile(paths["docx"]):
+        document = Document(paths["docx"])
+        text = "\n".join(p.text for p in document.paragraphs)
+        for table in document.tables:
+            text += "\n" + "\n".join(cell.text for row in table.rows for cell in row.cells)
+        missing_stages = [stage["stage"] for stage in data["flow"]["in_class"] if stage["stage"] not in text]
+        checks.append({"name": "DOCX 包含全部课中环节", "ok": not missing_stages, "detail": ", ".join(missing_stages) or "全部命中"})
+        top_objectives = [objective_text(item) for group in ["knowledge", "ability", "quality"]
+                          for item in objective_items(data, group)]
+        missing_goals = [goal for goal in top_objectives if goal and goal not in text]
+        checks.append({"name": "DOCX 包含三维教学目标", "ok": not missing_goals,
+                       "detail": "%d 个缺失" % len(missing_goals)})
+
+    report = {"ok": not errors and all(item["ok"] for item in checks),
+              "errors": errors, "warnings": warnings, "checks": checks}
+    print("=== v2 产物验收 ===")
+    for item in checks:
+        print("[%s] %s：%s" % ("通过" if item["ok"] else "失败", item["name"], item["detail"]))
+    if errors:
+        print("契约错误：")
+        for item in errors:
+            print("  - %s" % item)
+    return report
+
+
+def main():
+    parser = argparse.ArgumentParser(description="核查 DOCX、Markdown、HTML 与 lesson.json 的同源一致性")
+    parser.add_argument("--json", required=True, help="lesson.json 路径")
+    parser.add_argument("--output-dir", required=True, help="三件套输出目录")
+    parser.add_argument("--report", help="可选 JSON 报告路径")
+    args = parser.parse_args()
+    try:
+        report = audit(args.json, args.output_dir)
+    except (LessonInputError, ValueError, OSError) as exc:
+        print("验收失败：%s" % exc)
+        return 2
+    if args.report:
+        with open(args.report, "w", encoding="utf-8") as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+    return 0 if report["ok"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,132 @@
+{
+  "template_version": "1.0",
+  "template_file": "参考教案_3天培训.docx",
+  "generated_by": "analyze_template.py（自动推断，需教师确认一次）",
+  "confirmed": true,
+  "fields": {
+    "lesson_meta.course_name": {
+      "kind": "cell",
+      "table": 0,
+      "row": 0,
+      "col": 1
+    },
+    "lesson_meta.title": {
+      "kind": "cell",
+      "table": 0,
+      "row": 1,
+      "col": 1
+    },
+    "lesson_meta.week": {
+      "kind": "cell",
+      "table": 0,
+      "row": 2,
+      "col": 1
+    },
+    "lesson_meta.hours": {
+      "kind": "cell",
+      "table": 0,
+      "row": 3,
+      "col": 1
+    },
+    "lesson_meta.class_name": {
+      "kind": "cell",
+      "table": 0,
+      "row": 4,
+      "col": 1
+    },
+    "lesson_meta.teacher": {
+      "kind": "cell",
+      "table": 0,
+      "row": 5,
+      "col": 1
+    },
+    "lesson_meta.date": {
+      "kind": "cell",
+      "table": 0,
+      "row": 6,
+      "col": 1
+    },
+    "lesson_meta.course_type": {
+      "kind": "cell",
+      "table": 0,
+      "row": 7,
+      "col": 1
+    },
+    "key_points": {
+      "kind": "cell",
+      "table": 1,
+      "row": 0,
+      "col": 1,
+      "joiner": "；"
+    },
+    "difficult_points": {
+      "kind": "cell",
+      "table": 1,
+      "row": 1,
+      "col": 1,
+      "joiner": "；"
+    },
+    "methods": {
+      "kind": "cell",
+      "table": 2,
+      "row": 0,
+      "col": 1,
+      "joiner": "；"
+    },
+    "resources": {
+      "kind": "cell",
+      "table": 2,
+      "row": 1,
+      "col": 1,
+      "joiner": "；"
+    },
+    "reflection.effect": {
+      "kind": "cell",
+      "table": 10,
+      "row": 0,
+      "col": 1
+    },
+    "reflection.diagnosis": {
+      "kind": "cell",
+      "table": 10,
+      "row": 1,
+      "col": 1
+    },
+    "reflection.improvement": {
+      "kind": "cell",
+      "table": 10,
+      "row": 2,
+      "col": 1
+    },
+    "objectives.all": {
+      "kind": "paragraph_range",
+      "start": 3,
+      "end": 12
+    },
+    "student_analysis": {
+      "kind": "paragraph",
+      "index": 14
+    }
+  },
+  "blocks": {
+    "in_class": {
+      "mode": "units",
+      "source": "flow",
+      "columns": {
+        "content": 0,
+        "student_activity": 1,
+        "teacher_activity": 2,
+        "design_intent": 3
+      },
+      "heading_template": "环节·{stage}（知识点：{refs}）",
+      "signature": [
+        "教学内容",
+        "学生活动",
+        "教师活动",
+        "设计意图"
+      ],
+      "unit_count": 7
+    }
+  },
+  "note": "按参考教案的实际呈现方式调过：重点/难点/方法/资源用分号连成一段；教学目标按编号段落区间整体替换并补三分组标签。"
+}

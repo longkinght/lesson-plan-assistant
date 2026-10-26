@@ -1,110 +1,212 @@
 ---
-name: lesson-plan-assistant
-description: 备课知识图谱助手。输入"周次+课题+要点"（或教材/课标/PPT文本），一键产出三件套：标准教案 docx（填好可直接交）、Markdown 知识图谱（知识树+关系表+教学目标索引）、HTML 信息图（交互式一课一图，离线可用）。触发场景：备课、写教案、生成教案、做知识图谱、一课一图、整理课题知识点。关键词：备课、教案、知识图谱、知识树、教学目标、布鲁姆、课程设计。
+name: hb-lesson-plan-assistant
+display_name: 备课知识图谱助手
+display_name_en: Lesson Plan Assistant
+description: 将课题、周次、学时和教学要点整理为结构化 lesson.json，并同源生成可编辑教案 DOCX、Markdown 知识图谱和离线 HTML 课程看板；可按学校提供的 Word 样本严格复刻版式。用于备课、写教案、设计课堂时间轴、整理知识树、建立教学目标与知识点映射、生成教师可直接修改的课程材料。
+description_zh: "把「周次 + 课题 + 要点」整理成结构化课程数据，一次同源产出可编辑教案 DOCX、Markdown 知识图谱与单文件离线 HTML 看板；可按学校提供的 Word 样本严格复刻版式。覆盖目标—知识点绑定、课中时长合计、五环节四维结构与反思真实性校验。用于备课、写教案、课堂时间轴、知识树、教学目标映射、生成教师可直接修改的课程材料。"
+description_en: "Turn a topic, week and period count into a structured lesson.json, then render three same-source artifacts — an editable Word lesson plan (built-in layout, or strict fill into a school-provided DOCX sample), a Markdown knowledge map, and a single-file offline HTML dashboard. Validates that objectives bind to knowledge points, that in-class durations sum to the scheduled periods, and that the five-stage / four-dimension structure holds. Use for lesson planning, lesson plan documents, class timelines, knowledge trees, objective-to-knowledge mapping, and teacher-editable course material."
+version: "2.2.4"
+license: MIT
+author: 黄彬
+agent_created: true
 ---
 
-# 备课知识图谱助手（Lesson Plan Assistant）
+# 备课知识图谱助手 v2
 
-## 它解决什么
-教师备课的真正痛点不是"写不出教案"，而是：
-- 教案、知识图谱各写各的，知识点对不上
-- 风格每次漂移，今天写的和上周不像同一个人写的
-- 格式要手动填模板，反复返工
-- 备完就扔，课程知识无法沉淀
+## 用途
 
-本 Skill 的核心信念：**教案不是知识清单，是一堂可执行的课；知识图谱不是装饰，是学生怎么学会的结构底座。** 一份结构化 JSON 驱动三件套，从源头保证教案与图谱同源同构。
+把“周次 + 课题 + 要点”整理成一堂可执行的课，并生成三种同源产物：
 
-## 触发条件
-用户说类似：
-- "帮我备第15周的课，栈和队列"
-- "生成一份教案 + 知识图谱，课题：XXX，要点：……"
-- "把这份教材/课标整理成一课一图"
-- "上周的课备好了，这周接着来"
+| 产物 | 用途 |
+|---|---|
+| `<周次>_<课题>_教案.docx` | 可编辑教案初稿：内置版式，或严格按学校样本 DOCX 输出 |
+| `<周次>_<课题>_知识图谱.md` | 可审阅、可版本管理的课程知识资产 |
+| `<周次>_<课题>_知识图谱.html` | 单文件离线课程看板，可筛选、折叠、打印为 PDF |
 
-## 输入要求（开始前必须确认）
-1. **课题**（必填）：本周讲什么
-2. **周次与学时**（必填）：第几周、几个学时
-3. **要点**（推荐）：核心知识点；可多可少，缺则从课题推断并告知用户
-4. **补充材料**（可选）：教材 docx/pdf 文本、课标、PPT 提取文本——有则依据更扎实
+核心原则：LLM 负责教学结构化，脚本负责校验、渲染和一致性验收。内容仍需授课教师审核，不能声称无需复核即可上交。
+
+## 何时使用
+
+用户提出以下需求时使用：
+
+- “帮我备第 15 周的课，课题是栈和队列”
+- “生成教案和知识图谱，要点是……”
+- “把这份教材/课标整理成一课一图”
+- “检查这份 lesson.json 的课堂时长和知识点映射”
+- “把上次的教案改成这一周的内容”
+
+不适用于：只需要一段教学设计文字，或只需要学科知识问答。
+
+需要贴合学校规定的 Word 版式时，走「模板通道」：上传学校样本 DOCX，解析一次映射后复用。
+
+## 输入
+
+开始前确认：
+
+1. **课题**：必填；
+2. **周次或培训周期**：必填；
+3. **学时与每学时分钟数**：必填，默认 45 分钟/学时；
+4. **教学对象与要点**：强烈建议提供；
+5. **教材、课标、PPT 文本或旧教案**：可选，有则作为事实依据。
+
+缺失信息只做最小推断，并在交付时明确标出推断项。不得编造教材章节、课标条目、课堂结果或学生数据。
 
 ## 执行流程
 
-### 步骤 0 · 骨架理解（轻确认）
-若提供教材/课标文本：先通读并产出"课程骨架理解"（模块划分 + 本周重点方向），简要展示给用户确认，再继续。若只有一句话输入，跳过此步。
+### 1. 读取契约
 
-### 步骤 1 · 教学结构化（LLM 核心步骤）
-**MANDATORY - 读取完整文件**：先读 `references/lesson-json-schema.md`（JSON 契约）与 `references/extraction-prompt.md`（抽取规则）。
-依据输入产出 `lesson.json`，关键纪律：
-- **学生视角**：每个知识点问三遍——课标/教材有依据吗？能写可衡量目标吗？学生真的需要学吗
-- **布鲁姆绑定**：Level≥4 知识点必须有 cognitive（记忆/理解/应用/分析/评价/创造）+ 可衡量的 objective
-- **课堂时间轴**：flow.in_class 五环节（导入→新授→新授→互动练习→小结作业）× 四维（内容/学生活动/教师活动/设计意图）
-- **易错点**写学生认知误区（如"栈后进先出 vs 队列先进先出易混淆"），不写"内容难"
-- 课中环节用 `knowledge_refs` 声明引用的知识点（一致性校验锚点）
+必须先完整读取：
 
-### 步骤 2 · 备课质检（Agent 自检并自动修正）
-**MANDATORY - 读取完整文件**：读 `references/quality-checklist.md`（17 项清单）。
-对照清单逐项检查，发现问题直接用 Edit 修正 lesson.json，循环直到通过。被降级/删除的候选知识点记录到 `rejected-notes.md`（不静默丢弃）。
+- `references/lesson-json-schema.md`
+- `references/extraction-prompt.md`
+- `references/quality-checklist.md`
 
-### 步骤 3 · 一键生成三件套
+需要章节模板时再读 `references/teacher-style-profile.md`。
+
+### 2. 建立 lesson.json
+
+按 v2 契约生成，重点执行：
+
+- 每条教学目标写成 `{text, knowledge_refs}`，引用真实知识点；
+- 每个知识点都有 `category`、`cognitive`、可观察的 `objective`；
+- 知识树深度优先，只有一个 Level 1 根节点；
+- 默认五环节：`intro → instruction → instruction → practice → summary`；
+- 每环节四维齐全，并填写 `duration_minutes`；
+- 课中总分钟必须等于 `hours × minutes_per_hour`；
+- 尚未上课时 `reflection.status = "pre_class"`，三段都以“待课后填写：”开头。
+
+需要保存时写入工作目录的 `lesson.json`，不覆盖用户已有源文件；涉及旧文件时建立新版本。
+
+### 3. 机器校验
+
 ```bash
-python scripts/lesson_assistant.py --json lesson.json --output-dir 输出目录 [--style teacher-zhang]
-```
-自动执行：硬校验（红线）→ Markdown 图谱 → HTML 信息图 → 教案 docx。
-`--style` 默认 `standard`（内置标准教案结构）；传入 `teacher-zhang` 时切换为**教师风格档案**驱动（封面+章节字段，见 `references/teacher-style-profile.md`），输出与用户历史教案同风格的成品。
-
-**硬红线（违反即阻止交付）**：
-- 教案引用的知识点必须存在于图谱节点（一致性）
-- 层级连续无断层；节点名唯一；关系引用精确匹配
-- Level≥4 知识点目标齐全；分类节点 category 为空
-
-### 步骤 4 · 交付与沉淀
-- 交付三件套：`第X周_教案.docx`、`第X周_知识图谱.md`、`第X周_知识图谱.html`
-- 建议把 `lesson.json` 与 `glossary` 归档，形成课程级知识资产（跨周次累积）
-- 用户提供学校模板/历史教案后，提炼为风格档案（见 `references/teacher-style.json`），渲染器按档案输出
-
-## 输出约定
-| 产物 | 内容 | 用途 |
-|------|------|------|
-| 第X周_教案.docx | 标准教案：基本信息/三维目标/学情/重难点/方法资源/课前课中课后/反思 | 直接上交 |
-| 第X周_知识图谱.md | 知识树（嵌套列表）+ 关系表 + 教学目标索引 + 术语表 | 可审、可版本管理 |
-| 第X周_知识图谱.html | 交互信息图：知识树可折叠、布鲁姆配色、点击查看详情 | 演示、课件、打印 |
-
-## 关键 Anti-Patterns（禁止）
-1. **不写"了解……"式目标**——必须可衡量："能够说出/解释/操作/分析……"
-2. **不把教材目录整章抄成知识树**——每个节点过"学生真的需要学吗"
-3. **不改写课中环节为"讲知识点一/二"两行**——五环节 × 四维齐全
-4. **不跳过校验**——硬红线不通过禁止交付
-5. **不静默丢弃候选知识点**——降级/删除要进 rejected-notes.md
-
-## 目录结构
-```
-lesson-plan-assistant/
-├── SKILL.md                     # 本文件
-├── skill.json                   # 技能元数据
-├── README.md                    # 用户使用说明
-├── references/
-│   ├── lesson-json-schema.md    # 同源 JSON 契约（必须读）
-│   ├── extraction-prompt.md     # 教学结构化抽取规则（必须读）
-│   ├── quality-checklist.md     # 17 项备课质检清单（必须读）
-│   ├── standard-lesson-template.md  # 标准教案结构说明
-│   ├── teacher-style-profile.md # 教师风格档案说明（张冬冬·章节教案风格）
-│   └── teacher-style.json       # 教师风格机器可读档案（渲染器读取）
-├── scripts/
-│   ├── lesson_assistant.py      # 主入口：一键三件套（--style 支持）
-│   ├── common.py                # 共享数据模型与硬校验
-│   ├── verify_consistency.py    # 硬校验 CLI
-│   ├── build_graph.py           # JSON → Markdown 图谱
-│   ├── render_html.py           # JSON → HTML 信息图
-│   └── build_lesson_docx.py     # JSON → 教案 docx（standard/teacher-zhang）
-├── templates/
-│   └── knowledge-graph.html     # 信息图模板（单文件离线）
-└── examples/
-    ├── stack_queue/             # 完整示例（栈和队列，标准风格）
-    ├── ai_training/             # 企业 AI 培训示例（3 天 12 模块）
-    └── ai_generative_art/       # 教师风格示例（人工智能生成艺术·第1章导论）
+python scripts/verify_consistency.py --json lesson.json
 ```
 
-## 兼容性
-- Python 3.8+，依赖仅 `python-docx`（Markdown/HTML 用标准库）
-- HTML 信息图零外部依赖，离线可用；可用无头浏览器截图导出 PNG
-- 教案默认用内置标准结构；学校模板接入后自动切换模板填充
+错误必须按字段路径修复。提醒项逐条判断，不能为了让命令通过而删除必要内容或绕过脚本。
+
+### 4. 生成三件套
+
+```bash
+python scripts/lesson_assistant.py --json lesson.json --output-dir output
+```
+
+使用通用章节模板：
+
+```bash
+python scripts/lesson_assistant.py --json lesson.json --output-dir output --style chapter
+```
+
+使用自定义风格：
+
+```bash
+python scripts/lesson_assistant.py --json lesson.json --output-dir output \
+  --style-config references/teacher-style.json
+```
+
+按学校样本严格生成（先读 `references/template-mapping.md`）：
+
+```bash
+# 首次：解析样本，产出映射与核对报告
+python scripts/analyze_template.py --template 学校样本.docx --out-dir ./模板
+
+# 教师核对后把 confirmed 改为 true，再生成
+python scripts/lesson_assistant.py --json lesson.json --output-dir output \
+  --template 学校样本.docx --template-map 模板/学校样本_template-map.json
+```
+
+模板模式下脚本不新建样式、不加页眉页脚、不追加附录，只往样本已有位置写文字；课中环节表按内容自动增减行，`备注`类表尾行不动。
+
+样本可以是空模板，也可以是**已填好内容的参考教案**。两种常见结构都能自动识别：
+
+| 结构 | 识别结果 |
+|---|---|
+| 一张表多行 | rows 模式：行克隆/裁剪 |
+| 每个环节一张独立小表 | units 模式：按「标题 + 小表」整组配对、克隆或删除 |
+| 教学目标写成编号段落 | `paragraph_range`：整段区间替换，避免留下重复行 |
+
+生成器先写入临时目录，三件全部成功后再移动到正式输出目录。失败时不得报告“部分完成”。
+
+### 5. 成品验收
+
+```bash
+python scripts/audit_artifacts.py --json lesson.json --output-dir output
+```
+
+必须确认：
+
+- Markdown 覆盖全部知识点；
+- HTML 内嵌数据与源 JSON 一致；
+- DOCX 包含全部课中环节与三维目标；
+- 文件名使用 `week_title`，没有路径穿越；
+- HTML 可离线打开，知识树可折叠，移动端无横向溢出。
+
+### 6. 交付说明
+
+交付时说明：
+
+1. 三种文件的实际路径；
+2. 校验通过、提醒项和人工复核项；
+3. 哪些内容是推断或有待补充来源；
+4. 反思区是备课占位，不是课堂事实；
+5. 下一步建议：教师审核、补教材依据、上课后补真实记录。
+
+## 输出命名
+
+```text
+<周次>_<课题>_教案.docx
+<周次>_<课题>_知识图谱.md
+<周次>_<课题>_知识图谱.html
+```
+
+文件名会清理 `/ \ : * ? " < > |` 和路径穿越片段。
+
+## 失败处理
+
+| 现象 | 处理 |
+|---|---|
+| JSON 解析失败 | 报告行列号，修复 JSON，不生成 |
+| 契约校验有错误 | 按字段路径修复后重跑，不跳过 |
+| 时长不匹配 | 重分配环节分钟，保持总分钟一致 |
+| 目标未绑定知识点 | 补 `knowledge_refs`，不得填不存在节点 |
+| 反思写成已发生结果 | 改回“待课后填写”，或提供真实证据后改 `post_class` |
+| DOCX 依赖缺失 | 执行 `pip install -r requirements.txt` |
+| 风格配置无法读取 | 检查路径与 JSON 结构，或改用 `standard` |
+| 模板地址越界 | 样本已改版，重新执行 `analyze_template.py` 或按报告修正索引 |
+| 模板某格仍为空 | 该字段在 lesson.json 中无内容，或地址指向了标签格 |
+| 模板生成后字体不对 | 样本该格没有可继承的格式，先在样本内给一个字设好字体再解析 |
+
+## 依赖与运行
+
+- Python 3.8+
+- 运行依赖：`python-docx`
+- 测试依赖：`pytest`，可选 `playwright` 做浏览器交互测试
+- HTML 不加载外部字体、脚本或图片，可离线打开
+
+```bash
+pip install -r requirements.txt
+python -m unittest discover -s tests -v
+```
+
+## 公开边界
+
+- 生成的是教案初稿，不是学校审核结论；
+- 不承诺提升学生成绩、培训 ROI 或组织能力；
+- 模板通道需要一次映射确认，不承诺零配置适配任意学校样本；超长内容无法保证与原样本逐像素一致；
+- 不默认包含任何真实学校、教师或学生信息；
+- 公开分享示例前，移除教师姓名、班级名单、内部资料和未授权案例。
+
+## 目录
+
+```text
+hb-lesson-plan-assistant/
+├── SKILL.md
+├── README.md
+├── CHANGELOG.md
+├── references/       # 契约、抽取规则、质量清单、版式、风格与模板映射说明
+├── scripts/          # 校验、三种渲染器、模板解析与填充、独立验收
+├── templates/        # 单文件离线 HTML 看板
+├── examples/         # 三个完整示例、成品与学校样本示例
+├── tests/            # 契约、CLI、产物和浏览器交互测试
+└── docs/             # 公开展示截图
+```
